@@ -7,7 +7,8 @@ import { useContext } from 'react'
 export interface IPrimaryLayout extends React.ComponentPropsWithoutRef<'div'> {}
 
 const PrimaryLayout: React.FC<IPrimaryLayout> = ({ children, title }) => {
-  const { authenticated, login, logOut } = useContext(AuthContext)
+  const { authenticated } = useContext(AuthContext)
+
   return (
     <>
       <Head>
