@@ -1,0 +1,185 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model users {
+  id        String      @id @unique @default(cuid())
+  createdAt DateTime    @default(now())
+  username  String      @unique
+  fullname  String
+  email     String
+  password  String
+  role      admin_roles
+}
+
+enum admin_roles {
+  admin
+  editor
+  user
+}
+
+model industries {
+  id        String      @id @unique @default(cuid())
+  createdAt DateTime    @default(now())
+  name      String      @unique
+  groups    groups[]
+  companies companies[]
+}
+
+model groups {
+  id           String      @id @unique @default(cuid())
+  createdAt    DateTime    @default(now())
+  name         String      @unique
+  address      String
+  companies    companies[]
+  industry     industries? @relation(fields: [industriesId], references: [name])
+  industriesId String?
+}
+
+model companies {
+  id           String      @id @unique @default(cuid())
+  createdAt    DateTime    @default(now())
+  name         String      @unique
+  address      String
+  group        groups?     @relation(fields: [groupsId], references: [name])
+  groupsId     String?
+  industry     industries? @relation(fields: [industriesId], references: [name])
+  industriesId String?
+  molds        molds[]
+  whitelist    whitelist[]
+  projects     projects[]
+}
+
+model whitelist {
+  id        String      @id @unique @default(cuid())
+  createdAt DateTime    @default(now())
+  companies companies[]
+  molds     molds?      @relation(fields: [moldNo], references: [moldNo])
+  moldNo    Int         @unique
+}
+
+model molds {
+  id           String         @id @unique @default(cuid())
+  createdAt    DateTime       @default(now())
+  moldNo       Int            @unique
+  kgm          String
+  perimeter    Int
+  moldType     mold_type
+  companies    companies?     @relation(fields: [companiesId], references: [name])
+  companiesId  String?
+  whitelist    whitelist?
+  toolCost     Int
+  manufactured manufactured[]
+}
+
+enum mold_type {
+  Solid
+  Hollow
+}
+
+model alloys {
+  id           String         @id @unique @default(cuid())
+  createdAt    DateTime       @default(now())
+  alloy        String         @unique
+  description  String
+  manufactured manufactured[]
+}
+
+model surfaces {
+  id           String         @id @unique @default(cuid())
+  createdAt    DateTime       @default(now())
+  surface      String         @unique
+  description  String
+  manufactured manufactured[]
+  colors       colors[]
+}
+
+model colors {
+  id           String         @id @unique @default(cuid())
+  createdAt    DateTime       @default(now())
+  color        String         @unique
+  description  String
+  manufactured manufactured[]
+  surfaces     surfaces[]
+}
+
+model drawings {
+  id           String         @id @unique @default(cuid())
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @default(now())
+  code         String         @unique
+  description  String
+  drawing      String
+  manufactured manufactured[]
+}
+
+model manufactured {
+  id            String    @id @unique @default(cuid())
+  createdAt     DateTime  @default(now())
+  molds         molds     @relation(fields: [moldsId], references: [moldNo])
+  moldsId       Int
+  profileLength Int
+  alloys        alloys    @relation(fields: [alloysId], references: [alloy])
+  alloysId      String
+  surfaces      surfaces  @relation(fields: [surfacesId], references: [surface])
+  surfacesId    String
+  colors        colors    @relation(fields: [colorsId], references: [color])
+  colorsId      String
+  drawings      drawings? @relation(fields: [drawingsId], references: [code])
+  drawingsId    String?
+  bom           bom[]
+}
+
+model purchased {
+  id          String   @id @unique @default(cuid())
+  createdAt   DateTime @default(now())
+  code        String   @unique
+  description String
+  cost        Decimal
+  unit        unit
+  bom         bom[]
+}
+
+model projects {
+  id          String     @id @unique @default(cuid())
+  createdAt   DateTime   @default(now())
+  name        String     @unique
+  description String
+  companies   companies  @relation(fields: [companiesId], references: [name])
+  companiesId String
+  products    products[]
+}
+
+model bom {
+  id             String        @id @unique @default(cuid())
+  createdAt      DateTime      @default(now())
+  manufactured   manufactured? @relation(fields: [manufacturedId], references: [id])
+  manufacturedId String?
+  purchased      purchased?    @relation(fields: [purchasedId], references: [code])
+  purchasedId    String?
+  quantity       Int
+  products       products?     @relation(fields: [productsId], references: [id])
+  productsId     Int?
+}
+
+model products {
+  id                Int        @id @unique @default(autoincrement())
+  createdAt         DateTime   @default(now())
+  customerProductId String
+  bom               bom[]
+  projects          projects[]
+}
+
+enum unit {
+  m
+  pcs
+  kg
+}
