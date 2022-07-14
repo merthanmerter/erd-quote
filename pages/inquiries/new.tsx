@@ -6,14 +6,10 @@ import { useState } from 'react'
 import useSWR from 'swr'
 
 const NewInquiryPage: NextPageWithLayout = () => {
-  const { data: projects, mutate } = useFetchData('/api/data/many/projects')
+  const { data: projects } = useFetchData('/api/data/many/projects')
   const [project, setProject] = useState('')
 
-  const {
-    data,
-    // isValidating,
-    // error
-  } = useSWR(project ? `/api/projects/${project}` : null, fetcher)
+  const { data } = useSWR(project ? `/api/projects/${project}` : null, fetcher)
 
   return (
     <section>

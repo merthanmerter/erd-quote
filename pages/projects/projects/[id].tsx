@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { NextPageWithLayout } from 'pages/page'
 
 const ProjectPage: NextPageWithLayout = () => {
-  const { data: project, mutate } = useFetchData(`/api/data/unique/projects`, { findUnique: true })
+  const { data: project } = useFetchData(`/api/data/unique/projects`, { findUnique: true })
 
   return (
     <section>

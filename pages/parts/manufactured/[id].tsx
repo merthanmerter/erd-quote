@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { NextPageWithLayout } from 'pages/page'
 
 const ManufacturedPartPage: NextPageWithLayout = () => {
-  const { data: manufactured, mutate } = useFetchData(`/api/data/unique/manufactured`, { findUnique: true })
+  const { data: manufactured } = useFetchData(`/api/data/unique/manufactured`, { findUnique: true })
 
   return (
     <section>
