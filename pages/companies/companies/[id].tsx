@@ -51,8 +51,7 @@ const CompanyPage: NextPageWithLayout = () => {
         {new Date(companies?.createdAt).toLocaleDateString()}
       </p>
       <div className="">
-        <div className="mt-10 pt-6 border-t">
-          <p className="font-bold">Projects:</p>
+        <div className="mt-10 border-t">
           <Table columns={columns} rows={rows} />
         </div>
         <div className="mt-6 border-t pt-6">

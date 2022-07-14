@@ -64,7 +64,13 @@ export default function MyCombobox(props: any) {
               }}
             />
           ) : (
-            <SelectorIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+            <SelectorIcon
+              onClick={() => {
+                setQuery('')
+              }}
+              className="h-5 w-5 text-gray-400"
+              aria-hidden="true"
+            />
           )}
         </Combobox.Button>
 
@@ -76,7 +82,7 @@ export default function MyCombobox(props: any) {
               <Combobox.Option
                 key={el.id}
                 className={({ active }) =>
-                  `appearance-none relative cursor-default select-none py-2 pl-10 pr-4 ${
+                  `appearance-none relative cursor-default select-none py-2 px-4 ${
                     active ? 'bg-zinc-600 text-white' : 'text-gray-900'
                   }`
                 }

@@ -1,5 +1,7 @@
 import { Menu } from '@headlessui/react'
+import Logo from 'assets/images/erd-metal-logo-white.png'
 import AuthContext from 'context/auth'
+import Image from 'next/image'
 import Link from 'next/link'
 import { forwardRef, useContext } from 'react'
 
@@ -54,7 +56,8 @@ const Header: React.FC<IHeader> = ({ className, ...headerProps }) => {
         <div className="container">
           <div className="flex justify-between">
             <Link href="/">
-              <div className="flex items-center cursor-pointer">
+              <div className="flex items-center gap-2 cursor-pointer">
+                <Image src={Logo} alt="Erd Metal" width={23} height={20} />
                 <p className="text-2xl font-bold select-none">ERD INQUIRY</p>
                 <span className="ml-2 text-xs bg-blue-600 rounded text-white px-1 py-0.5 font-bold">ALPHA v1.0.0</span>
               </div>

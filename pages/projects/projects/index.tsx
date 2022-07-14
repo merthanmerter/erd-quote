@@ -8,6 +8,7 @@ import { NextPageWithLayout } from 'pages/page'
 
 const ProjectsPage: NextPageWithLayout = () => {
   const { data: projects, mutate } = useFetchData('/api/data/many/projects')
+  const { data: companies } = useFetchData('/api/data/many/companies')
 
   const columns = [
     { id: 0, title: 'Manage' },
@@ -21,7 +22,7 @@ const ProjectsPage: NextPageWithLayout = () => {
     <tr key={el.id} className={key % 2 ? '' : 'bg-gray-100'}>
       <td className="p-2 flex gap-2">
         <EditButton href={`/projects/projects/${el.id}`} />
-        <DeleteButton mutate={mutate} table="industries" data={el} />
+        <DeleteButton mutate={mutate} table="projects" data={el} />
       </td>
       <td className="p-2">{el.companiesId}</td>
       <td className="p-2">{el.name}</td>
@@ -35,8 +36,19 @@ const ProjectsPage: NextPageWithLayout = () => {
       <InputGroup
         mutate={mutate}
         data={{
-          table: 'industries',
-          inputs: [{ id: 'name', label: 'Industry Name', required: true }],
+          table: 'projects',
+          inputs: [
+            {
+              id: 'companiesId',
+              label: 'Company',
+              autoComplete: true,
+              acArray: companies,
+              required: true,
+              options: 'name',
+            },
+            { id: 'name', label: 'Project Name', required: true },
+            { id: 'description', label: 'Project Description', required: true },
+          ],
         }}
       />
       <Table columns={columns} rows={rows} />

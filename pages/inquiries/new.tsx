@@ -14,11 +14,17 @@ const NewInquiryPage: NextPageWithLayout = () => {
   return (
     <section>
       <div>Selected Project: {project.toUpperCase()}</div>
-      {projects?.map((project: any, key: number) => (
-        <button className="hover:underline" key={key} onClick={() => setProject(project.id)}>
-          {project.name}
-        </button>
-      ))}
+      <div className="py-3">
+        {projects?.map((project: any, key: number) => (
+          <button
+            className="text-white font-bold bg-zinc-600 mr-2 p-2 rounded hover:underline"
+            key={key}
+            onClick={() => setProject(project.id)}
+          >
+            {project.name}
+          </button>
+        ))}
+      </div>
 
       <div>
         {data?.products?.map((el: any) => (
