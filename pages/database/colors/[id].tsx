@@ -1,46 +1,17 @@
-import Button from '@components/button'
+import Button from '@components/buttons'
 import MyCombobox from '@components/combobox'
-import { prisma } from '@prisma/lib/prisma'
-import { GetServerSideProps } from 'next'
-import Head from 'next/head'
-import { useRouter } from 'next/router'
+import PrimaryLayout from '@components/layouts/primary'
+import useFetchData from 'hooks/useFetchData'
 import { NextPageWithLayout } from 'pages/page'
 import { useDeferredValue } from 'react'
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const id: any = query.id!
-
-  const colors = await prisma.colors.findUnique({
-    where: { id: id },
-    include: {
-      surfaces: true,
-    },
-  })
-
-  const surfaces = await prisma['surfaces'].findMany({})
-
-  return {
-    props: {
-      colors: JSON.stringify(colors),
-      surfaces: JSON.stringify(surfaces),
-    },
-  }
-}
-
-type Props = {
-  colors: any
-  surfaces: any
-}
-
-const Mold: NextPageWithLayout<Props> = (props) => {
-  const router = useRouter()
-
-  const deferredColors = useDeferredValue(JSON.parse(props.colors))
-  const deferredSurfaces = useDeferredValue(JSON.parse(props.surfaces)) // upsert company to whitelist table
+const ColorPage: NextPageWithLayout = () => {
+  const { data: color, mutate } = useFetchData(`/api/data/unique/colors`, { findUnique: true })
+  const { data: surfaces } = useFetchData('/api/data/many/surfaces')
 
   // whitelist combobox results - current & existing companies excluded
-  const surfaces = useDeferredValue(
-    deferredSurfaces.filter((ar: any) => !deferredColors?.surfaces?.find((rm: any) => rm.surface === ar.surface))
+  const filteredSurfaces = useDeferredValue(
+    surfaces?.filter((ar: any) => !color?.surfaces?.find((rm: any) => rm.surface === ar.surface))
   )
 
   const addSurface = async (event: any) => {
@@ -51,7 +22,7 @@ const Mold: NextPageWithLayout<Props> = (props) => {
 
     const body = {
       data: {
-        color: deferredColors.color,
+        color: color?.color,
         surface: input,
       },
       table: 'colors',
@@ -64,16 +35,16 @@ const Mold: NextPageWithLayout<Props> = (props) => {
         'Content-Type': 'application/json',
       },
     })
+
     if (res.status < 300) {
-      router.replace(router.asPath)
-      router.reload()
+      mutate()
     }
   }
 
   const deleteSurface = async (event: any, id: string) => {
     const body = {
       data: {
-        color: deferredColors.color,
+        color: color?.color,
         surface: id,
       },
       table: 'colors',
@@ -86,49 +57,48 @@ const Mold: NextPageWithLayout<Props> = (props) => {
         'Content-Type': 'application/json',
       },
     })
+
     if (res.status < 300) {
-      router.replace(router.asPath)
-      router.reload()
+      mutate()
     }
   }
 
   return (
-    <>
-      <Head>
-        <title>Erd Metal - Molds</title>
-      </Head>
-      <main className="container">
-        <p className="">
-          <span className="font-bold mr-2">Color:</span>
-          {deferredColors.color}
-        </p>
-        <p className="">
-          <span className="font-bold mr-2">Description:</span>
-          {deferredColors.description}
-        </p>
-        <p className="">
-          <span className="font-bold mr-2">Created At:</span>
-          {new Date(deferredColors.createdAt).toLocaleDateString()}
-        </p>
+    <section>
+      <p className="">
+        <span className="font-bold mr-2">Color:</span>
+        {color?.color}
+      </p>
+      <p className="">
+        <span className="font-bold mr-2">Description:</span>
+        {color?.description}
+      </p>
+      <p className="">
+        <span className="font-bold mr-2">Created At:</span>
+        {new Date(color?.createdAt).toLocaleDateString()}
+      </p>
 
-        <div className="border-t mt-6 pt-6">
-          <form onSubmit={addSurface} className="flex gap-2 items-center justify-start">
-            <MyCombobox array={surfaces} name={'surface'} label={'Surface'} required={true} options="surface" />
-            <Button>Connect to Surface</Button>
-          </form>
-          <div className="mt-6 border-t pt-6 pb-3">
-            <p className="font-bold">Surfaces:</p>
-          </div>
-          {deferredColors?.surfaces?.map((el: any) => (
-            <div key={el.id} className="flex gap-2 pb-2 items-center justify-start">
-              <Button onClick={(event: any) => deleteSurface(event, el.id)}>Remove</Button>
-              <p>{el.surface}</p>
-            </div>
-          ))}
+      <div className="border-t mt-6 pt-6">
+        <form onSubmit={addSurface} className="flex gap-2 items-center justify-start">
+          <MyCombobox array={filteredSurfaces} name={'surface'} label={'Surface'} required={true} options="surface" />
+          <Button>Connect to Surface</Button>
+        </form>
+        <div className="mt-6 border-t pt-6 pb-3">
+          <p className="font-bold">Surfaces:</p>
         </div>
-      </main>
-    </>
+        {color?.surfaces?.map((el: any) => (
+          <div key={el.id} className="flex gap-2 pb-2 items-center justify-start">
+            <Button onClick={(event: any) => deleteSurface(event, el.id)}>Remove</Button>
+            <p>{el.surface}</p>
+          </div>
+        ))}
+      </div>
+    </section>
   )
 }
 
-export default Mold
+export default ColorPage
+
+ColorPage.getLayout = (page) => {
+  return <PrimaryLayout title="Erd Quote - Color">{page}</PrimaryLayout>
+}

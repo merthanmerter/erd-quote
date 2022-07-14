@@ -1,28 +1,12 @@
 import DeleteButton from '@components/deletebutton'
 import InputGroup from '@components/inputGroup'
+import PrimaryLayout from '@components/layouts/primary'
 import Table from '@components/table'
-import { prisma } from '@prisma/lib/prisma'
-import { GetServerSideProps } from 'next'
-import Head from 'next/head'
+import useFetchData from 'hooks/useFetchData'
 import { NextPageWithLayout } from 'pages/page'
-import { useDeferredValue } from 'react'
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const purchased = await prisma['purchased'].findMany({})
-
-  return {
-    props: {
-      purchased: JSON.stringify(purchased),
-    },
-  }
-}
-
-type Props = {
-  purchased: any
-}
-
-const PurchasedParts: NextPageWithLayout<Props> = (props) => {
-  const deferredPurchased = useDeferredValue(JSON.parse(props.purchased))
+const PurchasedPartsPage: NextPageWithLayout = () => {
+  const { data: purchased, mutate } = useFetchData('/api/data/many/purchased')
 
   const columns = [
     { id: 0, title: 'Manage' },
@@ -33,10 +17,10 @@ const PurchasedParts: NextPageWithLayout<Props> = (props) => {
     { id: 5, title: 'Created At' },
   ]
 
-  const rows = deferredPurchased.map((el: any, key: number) => (
+  const rows = purchased?.map((el: any, key: number) => (
     <tr key={el.id} className={key % 2 ? '' : 'bg-gray-100'}>
       <td className="p-2 flex gap-2">
-        <DeleteButton table="purchased" data={el} />
+        <DeleteButton mutate={mutate} table="purchased" data={el} />
       </td>
       <td className="p-2">{el.code}</td>
       <td className="p-2">{el.description}</td>
@@ -47,36 +31,36 @@ const PurchasedParts: NextPageWithLayout<Props> = (props) => {
   ))
 
   return (
-    <>
-      <Head>
-        <title>Erd Metal - Purchased Parts</title>
-      </Head>
-      <main className="container">
-        <InputGroup
-          data={{
-            table: 'purchased',
-            inputs: [
-              { id: 'code', label: 'Code', required: true },
-              { id: 'description', label: 'Description', required: true },
-              { id: 'cost', type: 'number', label: 'Cost (USD)' },
-              {
-                id: 'unit',
-                label: 'Unit',
-                required: true,
-                autoComplete: true,
-                acArray: [
-                  { id: 0, name: 'pcs' },
-                  { id: 1, name: 'm' },
-                  { id: 2, name: 'kg' },
-                ],
-              },
-            ],
-          }}
-        />
-        <Table columns={columns} rows={rows} />
-      </main>
-    </>
+    <section>
+      <InputGroup
+        mutate={mutate}
+        data={{
+          table: 'purchased',
+          inputs: [
+            { id: 'code', label: 'Code', required: true },
+            { id: 'description', label: 'Description', required: true },
+            { id: 'cost', type: 'number', label: 'Cost (USD)' },
+            {
+              id: 'unit',
+              label: 'Unit',
+              required: true,
+              autoComplete: true,
+              acArray: [
+                { id: 0, name: 'pcs' },
+                { id: 1, name: 'm' },
+                { id: 2, name: 'kg' },
+              ],
+            },
+          ],
+        }}
+      />
+      <Table columns={columns} rows={rows} />
+    </section>
   )
 }
 
-export default PurchasedParts
+export default PurchasedPartsPage
+
+PurchasedPartsPage.getLayout = (page) => {
+  return <PrimaryLayout title="Erd Quote - Purchased Parts">{page}</PrimaryLayout>
+}

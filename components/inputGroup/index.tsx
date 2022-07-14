@@ -1,16 +1,15 @@
-import Button from '@components/button'
+import Button from '@components/buttons'
 import MyCombobox from '@components/combobox'
-import { useRouter } from 'next/router'
-import React from 'react'
+import { useState } from 'react'
 
 type Props = {
   data: any
+  mutate: any
 }
 
-const InputGroup: React.FC<Props> = ({ data }) => {
-  const router = useRouter()
-  const [error, setError] = React.useState<[]>([])
-  const [exists, setExists] = React.useState<boolean>(false)
+const InputGroup: React.FC<Props> = ({ data, mutate }) => {
+  const [error, setError] = useState<[]>([])
+  const [exists, setExists] = useState<boolean>(false)
 
   const createCustomer = async (event: any) => {
     event.preventDefault()
@@ -53,8 +52,7 @@ const InputGroup: React.FC<Props> = ({ data }) => {
         },
       })
       if (res.status < 300) {
-        router.replace(router.asPath)
-        router.reload()
+        mutate()
         setExists(false)
         setError([])
       } else {
@@ -66,14 +64,17 @@ const InputGroup: React.FC<Props> = ({ data }) => {
 
   return (
     <div className="">
-      <Alert pop={exists} type={'error'}>
+      {/* <Alert pop={exists} type={'error'}>
         Something went wrong.
-      </Alert>
+      </Alert> */}
       <form className="flex gap-x-2 gap-y-4 items-center flex-wrap" onSubmit={createCustomer}>
         {data?.inputs?.map((el: any, key: any) =>
           el.autoComplete ? (
             <MyCombobox
               array={el.acArray}
+              setExists={setExists}
+              setError={setError}
+              exists={exists}
               error={error}
               key={key}
               name={el.id}
@@ -83,7 +84,17 @@ const InputGroup: React.FC<Props> = ({ data }) => {
               type={el?.type}
             />
           ) : (
-            <Input error={error} key={key} name={el.id} label={el.label} required={el.required} type={el?.type} />
+            <Input
+              setExists={setExists}
+              setError={setError}
+              exists={exists}
+              error={error}
+              key={key}
+              name={el.id}
+              label={el.label}
+              required={el.required}
+              type={el?.type}
+            />
           )
         )}
         <Button>Add</Button>
@@ -94,44 +105,39 @@ const InputGroup: React.FC<Props> = ({ data }) => {
 
 export default InputGroup
 
-type AlertProps = {
-  children: string
-  type: string
-  pop: boolean
-}
+// type AlertProps = {
+//   children: string
+//   type: string
+//   pop: boolean
+// }
 
-const Alert: React.FC<AlertProps> = (props: any) => {
-  if (props.pop) {
-    return (
-      <div
-        className={
-          'w-full mb-6 font-bold p-2 rounded ' +
-          (props.type == 'error' && ' text-red-600 bg-red-200 ') +
-          (props.type == 'info' && ' text-blue-600 bg-blue-200 ') +
-          (props.type == 'warning' && ' text-yellow-600 bg-yellow-200 ') +
-          (props.type == 'success' && ' text-green-600 bg-green-200 ')
-        }
-      >
-        {props.children}
-      </div>
-    )
-  } else {
-    return <></>
-  }
-}
+// const Alert: React.FC<AlertProps> = (props: any) => {
+//   if (props.pop) {
+//     return (
+//       <div
+//         className={
+//           'w-full mb-6 font-bold p-2 rounded ' +
+//           (props.type == 'error' && ' text-red-600 bg-red-200 ') +
+//           (props.type == 'info' && ' text-blue-600 bg-blue-200 ') +
+//           (props.type == 'warning' && ' text-yellow-600 bg-yellow-200 ') +
+//           (props.type == 'success' && ' text-green-600 bg-green-200 ')
+//         }
+//       >
+//         {props.children}
+//       </div>
+//     )
+//   } else {
+//     return <></>
+//   }
+// }
 
-type InputProps = {
-  label?: string
-  name: string
-  type?: string
-  error?: any
-  required?: boolean
-}
-const Input: React.FC<InputProps> = (props) => {
-  const [value, setValue] = React.useState('')
+function Input(props: any) {
+  const [value, setValue] = useState('')
 
   const handleEdit = (event: any) => {
     setValue(event.target.value)
+    props.setExists(false)
+    props.setError([])
   }
 
   return (
@@ -153,7 +159,8 @@ const Input: React.FC<InputProps> = (props) => {
         autoComplete="off"
         className={
           'w-auto border px-3 py-2 text-sm font-medium rounded leading-5 text-gray-900 focus:ring-0 ' +
-          (props.error != true && props.required && props?.error?.includes(props.name) && 'ring-red-500 ring-2')
+          (props.error != true && props.required && props?.error?.includes(props.name) && ' ring-red-500 ring-2 ') +
+          (props.exists && ' ring-red-500 ring-2 ')
         }
       />
     </div>

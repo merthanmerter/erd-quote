@@ -1,32 +1,13 @@
-import Button from '@components/button'
+import EditButton from '@components/buttons/edit'
 import DeleteButton from '@components/deletebutton'
 import InputGroup from '@components/inputGroup'
+import PrimaryLayout from '@components/layouts/primary'
 import Table from '@components/table'
-import { prisma } from '@prisma/lib/prisma'
-import { GetServerSideProps } from 'next'
-import Head from 'next/head'
-import Link from 'next/link'
+import useFetchData from 'hooks/useFetchData'
 import { NextPageWithLayout } from 'pages/page'
-import { useDeferredValue } from 'react'
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const colors = await prisma['colors'].findMany({
-    include: { surfaces: true },
-  })
-
-  return {
-    props: {
-      colors: JSON.stringify(colors),
-    },
-  }
-}
-
-type Props = {
-  colors: any
-}
-
-const Colors: NextPageWithLayout<Props> = (props) => {
-  const deferredColors = useDeferredValue(JSON.parse(props.colors))
+const ColorsPage: NextPageWithLayout = () => {
+  const { data: colors, mutate } = useFetchData('/api/data/many/colors')
 
   const columns = [
     { id: 0, title: 'Manage' },
@@ -36,13 +17,11 @@ const Colors: NextPageWithLayout<Props> = (props) => {
     { id: 4, title: 'Created At' },
   ]
 
-  const rows = deferredColors.map((el: any, key: number) => (
+  const rows = colors?.map((el: any, key: number) => (
     <tr key={el.id} className={key % 2 ? '' : 'bg-gray-100'}>
       <td className="p-2 flex gap-2">
-        <Link passHref href={`/database/colors/${el.id}`}>
-          <Button>Edit</Button>
-        </Link>
-        <DeleteButton table="colors" data={el} />
+        <EditButton href={`/database/colors/${el.id}`} />
+        <DeleteButton mutate={mutate} table="colors" data={el} />
       </td>
       <td className="p-2">{el.color}</td>
       <td className="p-2">{el.description}</td>
@@ -52,24 +31,24 @@ const Colors: NextPageWithLayout<Props> = (props) => {
   ))
 
   return (
-    <>
-      <Head>
-        <title>Erd Metal - Colors</title>
-      </Head>
-      <main className="container">
-        <InputGroup
-          data={{
-            table: 'colors',
-            inputs: [
-              { id: 'color', label: 'Color', required: true },
-              { id: 'description', label: 'Description', required: true },
-            ],
-          }}
-        />
-        <Table columns={columns} rows={rows} />
-      </main>
-    </>
+    <section>
+      <InputGroup
+        mutate={mutate}
+        data={{
+          table: 'colors',
+          inputs: [
+            { id: 'color', label: 'Color', required: true },
+            { id: 'description', label: 'Description', required: true },
+          ],
+        }}
+      />
+      <Table columns={columns} rows={rows} />
+    </section>
   )
 }
 
-export default Colors
+export default ColorsPage
+
+ColorsPage.getLayout = (page) => {
+  return <PrimaryLayout title="Erd Quote - Colors">{page}</PrimaryLayout>
+}

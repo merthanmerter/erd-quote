@@ -1,83 +1,55 @@
-import { prisma } from '@prisma/lib/prisma'
-import { GetServerSideProps } from 'next'
-import Head from 'next/head'
+import PrimaryLayout from '@components/layouts/primary'
+import useFetchData from 'hooks/useFetchData'
 import Link from 'next/link'
 import { NextPageWithLayout } from 'pages/page'
-import { useDeferredValue } from 'react'
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const id: any = query.id!
-
-  const manufactured = await prisma.manufactured.findUnique({
-    where: { id: id },
-    include: {
-      molds: true,
-      alloys: true,
-      surfaces: true,
-      colors: true,
-      drawings: true,
-    },
-  })
-
-  return {
-    props: {
-      manufactured: JSON.stringify(manufactured),
-    },
-  }
-}
-
-type Props = {
-  manufactured: any
-}
-
-const Manufactured: NextPageWithLayout<Props> = (props) => {
-  const deferredManufactured = useDeferredValue(JSON.parse(props.manufactured))
+const ManufacturedPartPage: NextPageWithLayout = () => {
+  const { data: manufactured, mutate } = useFetchData(`/api/data/unique/manufactured`, { findUnique: true })
 
   return (
-    <>
-      <Head>
-        <title>Erd Metal - Manufactured Part</title>
-      </Head>
-      <main className="container">
-        <div>
-          <p className="">
-            <span className="font-bold mr-2">Part Id:</span>
-            {deferredManufactured.id.toUpperCase()}
-          </p>
-          <p className="">
-            <span className="font-bold mr-2">Mold No:</span>
-            {deferredManufactured.moldsId}
-          </p>
-          <p className="">
-            <span className="font-bold mr-2">Length:</span>
-            {deferredManufactured.profileLength}
-          </p>
-          <p className="">
-            <span className="font-bold mr-2">Alloy:</span>
-            {deferredManufactured.alloysId}
-          </p>
-          <p className="">
-            <span className="font-bold mr-2">Surface:</span>
-            {deferredManufactured.surfacesId}
-          </p>
-          <p className="">
-            <span className="font-bold mr-2">Color:</span>
-            {deferredManufactured.colorsId}
-          </p>
-          <p className="">
-            <span className="font-bold mr-2">Drawing:</span>
-            <Link href="#">
-              <a className="hover:underline">{deferredManufactured.drawingsId}</a>
-            </Link>
-          </p>
-          <p className="">
-            <span className="font-bold mr-2">Created At:</span>
-            {new Date(deferredManufactured.createdAt).toLocaleDateString()}
-          </p>
-        </div>
-      </main>
-    </>
+    <section>
+      <div>
+        <p className="">
+          <span className="font-bold mr-2">Part Id:</span>
+          {manufactured?.id.toUpperCase()}
+        </p>
+        <p className="">
+          <span className="font-bold mr-2">Mold No:</span>
+          {manufactured?.moldsId}
+        </p>
+        <p className="">
+          <span className="font-bold mr-2">Length:</span>
+          {manufactured?.profileLength}
+        </p>
+        <p className="">
+          <span className="font-bold mr-2">Alloy:</span>
+          {manufactured?.alloysId}
+        </p>
+        <p className="">
+          <span className="font-bold mr-2">Surface:</span>
+          {manufactured?.surfacesId}
+        </p>
+        <p className="">
+          <span className="font-bold mr-2">Color:</span>
+          {manufactured?.colorsId}
+        </p>
+        <p className="">
+          <span className="font-bold mr-2">Drawing:</span>
+          <Link href="#">
+            <a className="hover:underline">{manufactured?.drawingsId}</a>
+          </Link>
+        </p>
+        <p className="">
+          <span className="font-bold mr-2">Created At:</span>
+          {new Date(manufactured?.createdAt).toLocaleDateString()}
+        </p>
+      </div>
+    </section>
   )
 }
 
-export default Manufactured
+export default ManufacturedPartPage
+
+ManufacturedPartPage.getLayout = (page) => {
+  return <PrimaryLayout title="Erd Quote - Manufactured Part">{page}</PrimaryLayout>
+}

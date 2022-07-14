@@ -1,3 +1,4 @@
+import EditButton from '@components/buttons/edit'
 import DeleteButton from '@components/deletebutton'
 import InputGroup from '@components/inputGroup'
 import PrimaryLayout from '@components/layouts/primary'
@@ -5,25 +6,26 @@ import Table from '@components/table'
 import useFetchData from 'hooks/useFetchData'
 import { NextPageWithLayout } from 'pages/page'
 
-const IndustriesPage: NextPageWithLayout = () => {
-  const { data: industries, mutate } = useFetchData('/api/data/many/industries')
+const ProjectsPage: NextPageWithLayout = () => {
+  const { data: projects, mutate } = useFetchData('/api/data/many/projects')
 
   const columns = [
     { id: 0, title: 'Manage' },
-    { id: 1, title: 'Industry Name' },
-    { id: 2, title: 'Groups' },
-    { id: 3, title: 'Companies' },
+    { id: 1, title: 'Company Name' },
+    { id: 2, title: 'Project Name' },
+    { id: 3, title: 'Project Description' },
     { id: 4, title: 'Created At' },
   ]
 
-  const rows = industries?.map((el: any, key: number) => (
+  const rows = projects?.map((el: any, key: number) => (
     <tr key={el.id} className={key % 2 ? '' : 'bg-gray-100'}>
       <td className="p-2 flex gap-2">
+        <EditButton href={`/projects/projects/${el.id}`} />
         <DeleteButton mutate={mutate} table="industries" data={el} />
       </td>
+      <td className="p-2">{el.companiesId}</td>
       <td className="p-2">{el.name}</td>
-      <td className="p-2">{el.groups.length}</td>
-      <td className="p-2">{el.companies.length}</td>
+      <td className="p-2">{el.description}</td>
       <td className="p-2">{new Date(el.createdAt).toLocaleDateString()}</td>
     </tr>
   ))
@@ -42,8 +44,8 @@ const IndustriesPage: NextPageWithLayout = () => {
   )
 }
 
-export default IndustriesPage
+export default ProjectsPage
 
-IndustriesPage.getLayout = (page) => {
-  return <PrimaryLayout title="Erd Quote - Industries">{page}</PrimaryLayout>
+ProjectsPage.getLayout = (page) => {
+  return <PrimaryLayout title="Erd Quote - Projects">{page}</PrimaryLayout>
 }

@@ -10,7 +10,7 @@ export default function MyCombobox(props: any) {
     if (query === '') {
       return props?.['array']
     } else {
-      return props?.['array'].filter((element: any) => {
+      return props?.['array']?.filter((element: any) => {
         const input = element[props?.['options'] || 'name']
         if (props?.['type'] == 'number') {
           return input
@@ -69,10 +69,10 @@ export default function MyCombobox(props: any) {
         </Combobox.Button>
 
         <Combobox.Options className="z-50 appearance-none absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-          {filteredArray(props).length === 0 && query !== '' ? (
+          {filteredArray(props)?.length === 0 && query !== '' ? (
             <div className="relative cursor-default select-none py-2 px-4 text-gray-700">Nothing found.</div>
           ) : (
-            filteredArray(props).map((el: any) => (
+            filteredArray(props)?.map((el: any) => (
               <Combobox.Option
                 key={el.id}
                 className={({ active }) =>

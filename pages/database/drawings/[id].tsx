@@ -1,67 +1,46 @@
-import { prisma } from '@prisma/lib/prisma'
-import { GetServerSideProps } from 'next'
-import Head from 'next/head'
+import PrimaryLayout from '@components/layouts/primary'
+import Loading from '@components/loading'
+import useFetchData from 'hooks/useFetchData'
 import { NextPageWithLayout } from 'pages/page'
-import { useDeferredValue } from 'react'
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const id: any = query.id!
+const DrawingPage: NextPageWithLayout = () => {
+  const { data: drawing } = useFetchData(`/api/data/unique/drawings`, { findUnique: true })
 
-  const drawings = await prisma.drawings.findUnique({
-    where: { id: id },
-    include: {
-      manufactured: true,
-    },
-  })
-
-  return {
-    props: {
-      drawings: JSON.stringify(drawings),
-    },
-  }
-}
-
-type Props = {
-  drawings: any
-}
-
-const Drawing: NextPageWithLayout<Props> = (props) => {
-  const deferredDrawings = useDeferredValue(JSON.parse(props.drawings))
+  if (!drawing) return <Loading />
 
   return (
-    <>
-      <Head>
-        <title>Erd Metal - Drawings</title>
-      </Head>
-      <main className="container">
-        <p className="">
-          <span className="font-bold mr-2">Code:</span>
-          {deferredDrawings.code}
-        </p>
-        <p className="">
-          <span className="font-bold mr-2">Description:</span>
-          {deferredDrawings.description}
-        </p>
-        <p className="">
-          <span className="font-bold mr-2">File Path:</span>
-          {deferredDrawings.drawing}
-        </p>
-        <p className="">
-          <span className="font-bold mr-2">Parts:</span>
-          {deferredDrawings.manufactured.length}
-        </p>
+    <section>
+      <p className="">
+        <span className="font-bold mr-2">Code:</span>
+        {drawing?.code}
+      </p>
+      <p className="">
+        <span className="font-bold mr-2">Description:</span>
+        {drawing?.description}
+      </p>
+      <p className="">
+        <span className="font-bold mr-2">File Path:</span>
+        {drawing?.drawing}
+      </p>
+      <p className="">
+        <span className="font-bold mr-2">Parts:</span>
+        {drawing?.manufactured?.length}
+      </p>
 
-        <p className="">
-          <span className="font-bold mr-2">Created At:</span>
-          {new Date(deferredDrawings.createdAt).toLocaleDateString()}
-        </p>
-        <p className="">
-          <span className="font-bold mr-2">Created At:</span>
-          {new Date(deferredDrawings.createdAt).toLocaleDateString()}
-        </p>
-      </main>
-    </>
+      <p className="">
+        <span className="font-bold mr-2">Created At:</span>
+        {new Date(drawing?.createdAt)?.toLocaleDateString()}
+      </p>
+      <p className="">
+        <span className="font-bold mr-2">Created At:</span>
+        {new Date(drawing?.createdAt)?.toLocaleDateString()}
+      </p>
+    </section>
   )
 }
 
-export default Drawing
+export default DrawingPage
+
+DrawingPage.getLayout = (page) => {
+  return <PrimaryLayout title="Erd Quote - Drawing">{page}</PrimaryLayout>
+}

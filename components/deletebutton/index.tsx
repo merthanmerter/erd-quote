@@ -1,15 +1,13 @@
-import Button from '@components/button'
-import { useRouter } from 'next/router'
+import { TrashIcon } from '@heroicons/react/solid'
 import React from 'react'
 
 type Props = {
   table: string
   data: any
+  mutate: any
 }
 
-const DeleteButton: React.FC<Props> = ({ data, table }) => {
-  const router = useRouter()
-
+const DeleteButton: React.FC<Props> = ({ data, table, mutate }) => {
   const deleteCustomer = async (event: any, id: string) => {
     event.preventDefault()
 
@@ -18,7 +16,7 @@ const DeleteButton: React.FC<Props> = ({ data, table }) => {
       table: table,
     }
 
-    const respone = await fetch(`/api/rest`, {
+    await fetch(`/api/rest`, {
       method: 'DELETE',
       body: JSON.stringify(body),
       headers: {
@@ -26,13 +24,14 @@ const DeleteButton: React.FC<Props> = ({ data, table }) => {
       },
     })
 
-    if (respone.status < 300) {
-      router.replace(router.asPath)
-      router.reload()
-    }
+    mutate()
   }
 
-  return <Button onClick={(event: any) => deleteCustomer(event, data.id)}>Delete</Button>
+  return (
+    <button onClick={(event: any) => deleteCustomer(event, data.id)} className="p-1">
+      <TrashIcon className="h-5 w-5 text-zinc-600" />
+    </button>
+  )
 }
 
 export default DeleteButton

@@ -1,42 +1,19 @@
-import { prisma } from '@prisma/lib/prisma'
-import { GetServerSideProps } from 'next'
+import PrimaryLayout from '@components/layouts/primary'
+import useFetchData from 'hooks/useFetchData'
 import { NextPageWithLayout } from 'pages/page'
-import React from 'react'
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const id: any = query.id!
-
-  const array = await prisma.groups.findUnique({
-    where: { id: id },
-  })
-
-  return {
-    props: {
-      array: JSON.stringify(array),
-    },
-  }
-}
-
-type Props = {
-  array: any
-}
-
-const Group: NextPageWithLayout<Props> = (props) => {
-  const [array, setArray] = React.useState<any>({
-    id: '',
-    createdAt: '',
-    company: '',
-  })
-
-  React.useEffect(() => {
-    setArray(JSON.parse(props.array))
-  }, [props])
+const GroupPage: NextPageWithLayout = () => {
+  const { data: group } = useFetchData(`/api/data/unique/groups`, { findUnique: true })
 
   return (
-    <main className="container">
-      <h1 className="uppercase">{array.id}</h1>
-    </main>
+    <section>
+      <h1 className="uppercase">{group?.id}</h1>
+    </section>
   )
 }
 
-export default Group
+export default GroupPage
+
+GroupPage.getLayout = (page) => {
+  return <PrimaryLayout title="Erd Quote - Group">{page}</PrimaryLayout>
+}

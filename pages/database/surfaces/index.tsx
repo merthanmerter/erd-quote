@@ -1,32 +1,12 @@
 import DeleteButton from '@components/deletebutton'
 import InputGroup from '@components/inputGroup'
+import PrimaryLayout from '@components/layouts/primary'
 import Table from '@components/table'
-import { prisma } from '@prisma/lib/prisma'
-import { GetServerSideProps } from 'next'
-import Head from 'next/head'
+import useFetchData from 'hooks/useFetchData'
 import { NextPageWithLayout } from 'pages/page'
-import { useDeferredValue } from 'react'
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const surfaces = await prisma['surfaces'].findMany({
-    include: {
-      colors: true,
-    },
-  })
-
-  return {
-    props: {
-      surfaces: JSON.stringify(surfaces),
-    },
-  }
-}
-
-type Props = {
-  surfaces: any
-}
-
-const Surfaces: NextPageWithLayout<Props> = (props) => {
-  const deferredSurfaces = useDeferredValue(JSON.parse(props.surfaces))
+const SurfacesPage: NextPageWithLayout = () => {
+  const { data: surfaces, mutate } = useFetchData('/api/data/many/surfaces')
 
   const columns = [
     { id: 0, title: 'Manage' },
@@ -36,10 +16,10 @@ const Surfaces: NextPageWithLayout<Props> = (props) => {
     { id: 5, title: 'Created At' },
   ]
 
-  const rows = deferredSurfaces.map((el: any, key: number) => (
+  const rows = surfaces?.map((el: any, key: number) => (
     <tr key={el.id} className={key % 2 ? '' : 'bg-gray-100'}>
       <td className="p-2 flex gap-2">
-        <DeleteButton table="surfaces" data={el} />
+        <DeleteButton mutate={mutate} table="surfaces" data={el} />
       </td>
       <td className="p-2">{el.surface}</td>
       <td className="p-2">{el.description}</td>
@@ -49,24 +29,24 @@ const Surfaces: NextPageWithLayout<Props> = (props) => {
   ))
 
   return (
-    <>
-      <Head>
-        <title>Erd Metal - Surfaces</title>
-      </Head>
-      <main className="container">
-        <InputGroup
-          data={{
-            table: 'surfaces',
-            inputs: [
-              { id: 'surface', label: 'Surface', required: true },
-              { id: 'description', label: 'Description', required: true },
-            ],
-          }}
-        />
-        <Table columns={columns} rows={rows} />
-      </main>
-    </>
+    <section>
+      <InputGroup
+        mutate={mutate}
+        data={{
+          table: 'surfaces',
+          inputs: [
+            { id: 'surface', label: 'Surface', required: true },
+            { id: 'description', label: 'Description', required: true },
+          ],
+        }}
+      />
+      <Table columns={columns} rows={rows} />
+    </section>
   )
 }
 
-export default Surfaces
+export default SurfacesPage
+
+SurfacesPage.getLayout = (page) => {
+  return <PrimaryLayout title="Erd Quote - Surfaces">{page}</PrimaryLayout>
+}

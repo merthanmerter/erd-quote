@@ -1,28 +1,12 @@
+import PrimaryLayout from '@components/layouts/primary'
 import fetcher from '@lib/fetcher'
-import { prisma } from '@prisma/lib/prisma'
-import { GetServerSideProps } from 'next'
+import useFetchData from 'hooks/useFetchData'
 import { NextPageWithLayout } from 'pages/page'
-import { useDeferredValue, useState } from 'react'
+import { useState } from 'react'
 import useSWR from 'swr'
 
-export const getServerSideProps: GetServerSideProps = async () =>
-  //
-  {
-    const projects = await prisma['projects'].findMany({})
-
-    return {
-      props: {
-        projects: JSON.stringify(projects),
-      },
-    }
-  }
-type Props = {
-  projects: any
-}
-
-const NewInquiry: NextPageWithLayout<Props> = (props) => {
-  const deferredProjects = useDeferredValue(JSON.parse(props.projects))
-
+const NewInquiryPage: NextPageWithLayout = () => {
+  const { data: projects, mutate } = useFetchData('/api/data/many/projects')
   const [project, setProject] = useState('')
 
   const {
@@ -32,9 +16,9 @@ const NewInquiry: NextPageWithLayout<Props> = (props) => {
   } = useSWR(project ? `/api/projects/${project}` : null, fetcher)
 
   return (
-    <main className="container">
+    <section>
       <div>Selected Project: {project.toUpperCase()}</div>
-      {deferredProjects.map((project: any, key: number) => (
+      {projects?.map((project: any, key: number) => (
         <button className="hover:underline" key={key} onClick={() => setProject(project.id)}>
           {project.name}
         </button>
@@ -45,8 +29,12 @@ const NewInquiry: NextPageWithLayout<Props> = (props) => {
           <div key={el.id}>{el.id + ' - ' + el.customerProductId}</div>
         ))}
       </div>
-    </main>
+    </section>
   )
 }
 
-export default NewInquiry
+export default NewInquiryPage
+
+NewInquiryPage.getLayout = (page) => {
+  return <PrimaryLayout title="Erd Quote - New Inquiry">{page}</PrimaryLayout>
+}

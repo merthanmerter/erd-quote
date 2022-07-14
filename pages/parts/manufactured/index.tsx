@@ -1,52 +1,18 @@
-import Button from '@components/button'
+import EditButton from '@components/buttons/edit'
 import DeleteButton from '@components/deletebutton'
 import InputGroup from '@components/inputGroup'
+import PrimaryLayout from '@components/layouts/primary'
 import Table from '@components/table'
-import { prisma } from '@prisma/lib/prisma'
-import { GetServerSideProps } from 'next'
-import Head from 'next/head'
-import Link from 'next/link'
+import useFetchData from 'hooks/useFetchData'
 import { NextPageWithLayout } from 'pages/page'
-import { useDeferredValue } from 'react'
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const manufactured = await prisma['manufactured'].findMany({
-    orderBy: { createdAt: 'desc' },
-  })
-  const molds = await prisma['molds'].findMany({})
-  const alloys = await prisma['alloys'].findMany({})
-  const surfaces = await prisma['surfaces'].findMany({})
-  const colors = await prisma['colors'].findMany({})
-  const drawings = await prisma['drawings'].findMany({})
-
-  return {
-    props: {
-      manufactured: JSON.stringify(manufactured),
-      molds: JSON.stringify(molds),
-      alloys: JSON.stringify(alloys),
-      surfaces: JSON.stringify(surfaces),
-      colors: JSON.stringify(colors),
-      drawings: JSON.stringify(drawings),
-    },
-  }
-}
-
-type Props = {
-  manufactured: any
-  molds: any
-  alloys: any
-  surfaces: any
-  colors: any
-  drawings: any
-}
-
-const ManufacturedParts: NextPageWithLayout<Props> = (props) => {
-  const deferredManufactured = useDeferredValue(JSON.parse(props.manufactured))
-  const deferredMolds = useDeferredValue(JSON.parse(props.molds))
-  const deferredAlloys = useDeferredValue(JSON.parse(props.alloys))
-  const deferredSurfaces = useDeferredValue(JSON.parse(props.surfaces))
-  const deferredColors = useDeferredValue(JSON.parse(props.colors))
-  const deferredDrawings = useDeferredValue(JSON.parse(props.drawings))
+const ManufacturedPartsPage: NextPageWithLayout = () => {
+  const { data: manufactured, mutate } = useFetchData('/api/data/many/manufactured')
+  const { data: molds } = useFetchData('/api/data/many/molds')
+  const { data: alloys } = useFetchData('/api/data/many/alloys')
+  const { data: surfaces } = useFetchData('/api/data/many/surfaces')
+  const { data: colors } = useFetchData('/api/data/many/colors')
+  const { data: drawings } = useFetchData('/api/data/many/drawings')
 
   const columns = [
     { id: 0, title: 'Manage' },
@@ -60,13 +26,11 @@ const ManufacturedParts: NextPageWithLayout<Props> = (props) => {
     { id: 8, title: 'Created At' },
   ]
 
-  const rows = deferredManufactured.map((el: any, key: number) => (
+  const rows = manufactured?.map((el: any, key: number) => (
     <tr key={el.id} className={key % 2 ? '' : 'bg-gray-100'}>
       <td className="p-2 flex gap-2">
-        <Link passHref href={`/parts/manufactured/${el.id}`}>
-          <Button>Edit</Button>
-        </Link>
-        <DeleteButton table="manufactured" data={el} />
+        <EditButton href={`/parts/manufactured/${el.id}`} />
+        <DeleteButton mutate={mutate} table="manufactured" data={el} />
       </td>
       <td className="p-2">{el.id.toUpperCase()}</td>
       <td className="p-2">{el.moldsId}</td>
@@ -80,69 +44,69 @@ const ManufacturedParts: NextPageWithLayout<Props> = (props) => {
   ))
 
   return (
-    <>
-      <Head>
-        <title>Erd Metal - Manufactured Parts</title>
-      </Head>
-      <main className="container">
-        <InputGroup
-          data={{
-            id: ['moldsId', 'profileLength', 'alloysId', 'surfacesId', 'colorsId', 'drawing'],
-            table: 'manufactured',
-            inputs: [
-              {
-                id: 'moldsId',
-                label: 'Mold',
-                required: true,
-                autoComplete: true,
-                acArray: deferredMolds,
-                options: 'moldNo',
-                type: 'number',
-              },
-              {
-                id: 'profileLength',
-                label: 'Profile Length (mm)',
-                required: true,
-                type: 'number',
-              },
-              {
-                id: 'alloysId',
-                label: 'Alloy',
-                required: true,
-                autoComplete: true,
-                acArray: deferredAlloys,
-                options: 'alloy',
-              },
-              {
-                id: 'surfacesId',
-                label: 'Surface',
-                required: true,
-                autoComplete: true,
-                acArray: deferredSurfaces,
-                options: 'surface',
-              },
-              {
-                id: 'colorsId',
-                label: 'Color',
-                required: true,
-                autoComplete: true,
-                acArray: deferredColors,
-                options: 'color',
-              },
-              {
-                id: 'drawingsId',
-                label: 'Drawing',
-                autoComplete: true,
-                acArray: deferredDrawings,
-                options: 'code',
-              },
-            ],
-          }}
-        />
-        <Table columns={columns} rows={rows} />
-      </main>
-    </>
+    <section>
+      <InputGroup
+        mutate={mutate}
+        data={{
+          id: ['moldsId', 'profileLength', 'alloysId', 'surfacesId', 'colorsId', 'drawing'],
+          table: 'manufactured',
+          inputs: [
+            {
+              id: 'moldsId',
+              label: 'Mold',
+              required: true,
+              autoComplete: true,
+              acArray: molds,
+              options: 'moldNo',
+              type: 'number',
+            },
+            {
+              id: 'profileLength',
+              label: 'Profile Length (mm)',
+              required: true,
+              type: 'number',
+            },
+            {
+              id: 'alloysId',
+              label: 'Alloy',
+              required: true,
+              autoComplete: true,
+              acArray: alloys,
+              options: 'alloy',
+            },
+            {
+              id: 'surfacesId',
+              label: 'Surface',
+              required: true,
+              autoComplete: true,
+              acArray: surfaces,
+              options: 'surface',
+            },
+            {
+              id: 'colorsId',
+              label: 'Color',
+              required: true,
+              autoComplete: true,
+              acArray: colors,
+              options: 'color',
+            },
+            {
+              id: 'drawingsId',
+              label: 'Drawing',
+              autoComplete: true,
+              acArray: drawings,
+              options: 'code',
+            },
+          ],
+        }}
+      />
+      <Table columns={columns} rows={rows} />
+    </section>
   )
 }
 
-export default ManufacturedParts
+export default ManufacturedPartsPage
+
+ManufacturedPartsPage.getLayout = (page) => {
+  return <PrimaryLayout title="Erd Quote - Manufactured Parts">{page}</PrimaryLayout>
+}
