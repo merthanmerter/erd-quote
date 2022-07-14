@@ -1,7 +1,8 @@
-import { GetServerSideProps } from 'next'
-import React, { useDeferredValue, useState } from 'react'
-import { prisma } from '@prisma/lib/prisma'
 import fetcher from '@lib/fetcher'
+import { prisma } from '@prisma/lib/prisma'
+import { GetServerSideProps } from 'next'
+import { NextPageWithLayout } from 'pages/page'
+import { useDeferredValue, useState } from 'react'
 import useSWR from 'swr'
 
 export const getServerSideProps: GetServerSideProps = async () =>
@@ -19,7 +20,7 @@ type Props = {
   projects: any
 }
 
-const NewInquiry: React.FC<Props> = (props) => {
+const NewInquiry: NextPageWithLayout<Props> = (props) => {
   const deferredProjects = useDeferredValue(JSON.parse(props.projects))
 
   const [project, setProject] = useState('')

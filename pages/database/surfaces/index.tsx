@@ -4,7 +4,8 @@ import Table from '@components/table'
 import { prisma } from '@prisma/lib/prisma'
 import { GetServerSideProps } from 'next'
 import Head from 'next/head'
-import React, { useDeferredValue } from 'react'
+import { NextPageWithLayout } from 'pages/page'
+import { useDeferredValue } from 'react'
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const surfaces = await prisma['surfaces'].findMany({
@@ -24,7 +25,7 @@ type Props = {
   surfaces: any
 }
 
-const Surfaces: React.FC<Props> = (props) => {
+const Surfaces: NextPageWithLayout<Props> = (props) => {
   const deferredSurfaces = useDeferredValue(JSON.parse(props.surfaces))
 
   const columns = [

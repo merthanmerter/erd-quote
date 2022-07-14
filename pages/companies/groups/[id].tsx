@@ -1,5 +1,6 @@
 import { prisma } from '@prisma/lib/prisma'
 import { GetServerSideProps } from 'next'
+import { NextPageWithLayout } from 'pages/page'
 import React from 'react'
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
@@ -20,7 +21,7 @@ type Props = {
   array: any
 }
 
-const Group: React.FC<Props> = (props) => {
+const Group: NextPageWithLayout<Props> = (props) => {
   const [array, setArray] = React.useState<any>({
     id: '',
     createdAt: '',

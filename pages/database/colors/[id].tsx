@@ -4,7 +4,8 @@ import { prisma } from '@prisma/lib/prisma'
 import { GetServerSideProps } from 'next'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import React, { useDeferredValue } from 'react'
+import { NextPageWithLayout } from 'pages/page'
+import { useDeferredValue } from 'react'
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const id: any = query.id!
@@ -31,7 +32,7 @@ type Props = {
   surfaces: any
 }
 
-const Mold: React.FC<Props> = (props) => {
+const Mold: NextPageWithLayout<Props> = (props) => {
   const router = useRouter()
 
   const deferredColors = useDeferredValue(JSON.parse(props.colors))

@@ -6,7 +6,8 @@ import { prisma } from '@prisma/lib/prisma'
 import { GetServerSideProps } from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
-import React, { useDeferredValue } from 'react'
+import { NextPageWithLayout } from 'pages/page'
+import { useDeferredValue } from 'react'
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const molds = await prisma['molds'].findMany({
@@ -27,7 +28,7 @@ type Props = {
   companies: any
 }
 
-const Molds: React.FC<Props> = (props) => {
+const Molds: NextPageWithLayout<Props> = (props) => {
   const deferredMolds = useDeferredValue(JSON.parse(props.molds))
   const deferredCompanies = useDeferredValue(JSON.parse(props.companies))
 

@@ -4,7 +4,8 @@ import Table from '@components/table'
 import { prisma } from '@prisma/lib/prisma'
 import { GetServerSideProps } from 'next'
 import Head from 'next/head'
-import React, { useDeferredValue } from 'react'
+import { NextPageWithLayout } from 'pages/page'
+import { useDeferredValue } from 'react'
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const industries = await prisma['industries'].findMany({
@@ -22,7 +23,7 @@ type Props = {
   industries: any
 }
 
-const Groups: React.FC<Props> = (props) => {
+const Groups: NextPageWithLayout<Props> = (props) => {
   const deferredIndustries = useDeferredValue(JSON.parse(props.industries))
 
   const columns = [

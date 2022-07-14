@@ -1,7 +1,8 @@
 import { prisma } from '@prisma/lib/prisma'
 import { GetServerSideProps } from 'next'
 import Head from 'next/head'
-import React, { useDeferredValue } from 'react'
+import { NextPageWithLayout } from 'pages/page'
+import { useDeferredValue } from 'react'
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const id: any = query.id!
@@ -24,7 +25,7 @@ type Props = {
   drawings: any
 }
 
-const Drawing: React.FC<Props> = (props) => {
+const Drawing: NextPageWithLayout<Props> = (props) => {
   const deferredDrawings = useDeferredValue(JSON.parse(props.drawings))
 
   return (
