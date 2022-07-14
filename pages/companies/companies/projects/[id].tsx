@@ -53,9 +53,7 @@ const Company: React.FC<Props> = (props) => {
       <main className="container">
         <p className="">
           <span className="font-bold mr-2">Company Name:</span>
-          <Link
-            href={`/companies/companies/${deferredProjects?.companies?.id}`}
-          >
+          <Link href={`/companies/companies/${deferredProjects?.companies?.id}`}>
             <a className="link">{deferredProjects?.companies?.name}</a>
           </Link>
         </p>
@@ -74,19 +72,11 @@ const Company: React.FC<Props> = (props) => {
         <div className="">
           <div className="mt-6 border-t pt-6">
             <div className="font-bold text-lg mb-4 border-b pb-3 w-fit">
-              Products{' '}
-              <span className="text-xs bg-gray-300 p-1 rounded">
-                Bill of Materials
-              </span>
+              Products <span className="text-xs bg-gray-300 p-1 rounded">Bill of Materials</span>
             </div>
             {deferredProjects?.products?.map((el: any) => (
               <div key={el.id} className="mb-4">
-                <p className="font-bold">
-                  {'PRD' +
-                    addLeadingZeros(el.id, 5) +
-                    ' - ' +
-                    el.customerProductId}
-                </p>
+                <p className="font-bold">{'PRD' + addLeadingZeros(el.id, 5) + ' - ' + el.customerProductId}</p>
                 {el.bom.map((el: any, key: number) => (
                   <div className="ml-6 mb-3" key={el.id}>
                     <span>{addLeadingZeros(key + 1, 3)} - </span>
@@ -97,9 +87,7 @@ const Company: React.FC<Props> = (props) => {
                     {(el.manufacturedId || el.purchasedId).toUpperCase()}
                     {' - '}
                     <span className="font-bold">{el.quantity}</span>pcs
-                    {el.purchasedId
-                      ? ' - $' + el?.purchased?.cost * el?.quantity
-                      : ''}
+                    {el.purchasedId ? ' - $' + el?.purchased?.cost * el?.quantity : ''}
                   </div>
                 ))}
               </div>

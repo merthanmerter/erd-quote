@@ -22,8 +22,7 @@ const InputGroup: React.FC<Props> = ({ data }) => {
       if (data?.inputs?.[i]?.required == true && input?.value == 0) {
         errorData.push(input['name'])
       } else {
-        tempData[data.inputs[i]?.id] =
-          input?.type == 'number' ? +input?.value || null : input?.value || null
+        tempData[data.inputs[i]?.id] = input?.type == 'number' ? +input?.value || null : input?.value || null
       }
     }
 
@@ -70,10 +69,7 @@ const InputGroup: React.FC<Props> = ({ data }) => {
       <Alert pop={exists} type={'error'}>
         Something went wrong.
       </Alert>
-      <form
-        className="flex gap-x-2 gap-y-4 items-center flex-wrap"
-        onSubmit={createCustomer}
-      >
+      <form className="flex gap-x-2 gap-y-4 items-center flex-wrap" onSubmit={createCustomer}>
         {data?.inputs?.map((el: any, key: any) =>
           el.autoComplete ? (
             <MyCombobox
@@ -87,14 +83,7 @@ const InputGroup: React.FC<Props> = ({ data }) => {
               type={el?.type}
             />
           ) : (
-            <Input
-              error={error}
-              key={key}
-              name={el.id}
-              label={el.label}
-              required={el.required}
-              type={el?.type}
-            />
+            <Input error={error} key={key} name={el.id} label={el.label} required={el.required} type={el?.type} />
           )
         )}
         <Button>Add</Button>
@@ -150,9 +139,7 @@ const Input: React.FC<InputProps> = (props) => {
       {props.label && (
         <label
           htmlFor={props.name}
-          className={
-            'uppercase absolute -top-2 left-2 bg-white px-1 text-xs font-bold pointer-events-none'
-          }
+          className={'uppercase absolute -top-2 left-2 bg-white px-1 text-xs font-bold pointer-events-none'}
         >
           {props.label}
         </label>
@@ -166,10 +153,7 @@ const Input: React.FC<InputProps> = (props) => {
         autoComplete="off"
         className={
           'w-auto border px-3 py-2 text-sm font-medium rounded leading-5 text-gray-900 focus:ring-0 ' +
-          (props.error != true &&
-            props.required &&
-            props?.error?.includes(props.name) &&
-            'ring-red-500 ring-2')
+          (props.error != true && props.required && props?.error?.includes(props.name) && 'ring-red-500 ring-2')
         }
       />
     </div>

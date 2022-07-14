@@ -34,11 +34,7 @@ const NewInquiry: React.FC<Props> = (props) => {
     <main className="container">
       <div>Selected Project: {project.toUpperCase()}</div>
       {deferredProjects.map((project: any, key: number) => (
-        <button
-          className="hover:underline"
-          key={key}
-          onClick={() => setProject(project.id)}
-        >
+        <button className="hover:underline" key={key} onClick={() => setProject(project.id)}>
           {project.name}
         </button>
       ))}

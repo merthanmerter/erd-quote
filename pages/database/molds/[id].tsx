@@ -44,12 +44,7 @@ const Mold: React.FC<Props> = (props) => {
   // whitelist combobox results - current & existing companies excluded
   const whitelist = useDeferredValue(
     deferredCompanies
-      .filter(
-        (ar: any) =>
-          !deferredMolds?.whitelist?.companies.find(
-            (rm: any) => rm.name === ar.name
-          )
-      )
+      .filter((ar: any) => !deferredMolds?.whitelist?.companies.find((rm: any) => rm.name === ar.name))
       .filter((el: any) => el.name != deferredMolds?.companiesId)
   )
 
@@ -134,32 +129,16 @@ const Mold: React.FC<Props> = (props) => {
         </p>
 
         <div className="border-t mt-6 pt-6">
-          <form
-            onSubmit={addToWhitelist}
-            className="flex gap-2 items-center justify-start"
-          >
-            <MyCombobox
-              array={whitelist}
-              name={'whitelist'}
-              label={'Company'}
-              required={true}
-              options="name"
-            />
+          <form onSubmit={addToWhitelist} className="flex gap-2 items-center justify-start">
+            <MyCombobox array={whitelist} name={'whitelist'} label={'Company'} required={true} options="name" />
             <Button>Add to Whitelist</Button>
           </form>
           <div className="mt-6 border-t pt-6 pb-3">
             <p className="font-bold">Whitelist:</p>
           </div>
           {deferredMolds?.whitelist?.companies?.map((el: any) => (
-            <div
-              key={el.id}
-              className="flex gap-2 pb-2 items-center justify-start"
-            >
-              <Button
-                onClick={(event: any) => deleteFromWhitelist(event, el.id)}
-              >
-                Remove
-              </Button>
+            <div key={el.id} className="flex gap-2 pb-2 items-center justify-start">
+              <Button onClick={(event: any) => deleteFromWhitelist(event, el.id)}>Remove</Button>
               <p>{el.name}</p>
             </div>
           ))}

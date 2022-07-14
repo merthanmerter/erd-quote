@@ -36,9 +36,7 @@ export default function MyCombobox(props: any) {
         {props.label && (
           <label
             htmlFor={props.name}
-            className={
-              'uppercase absolute -top-2 left-2 bg-white px-1 text-xs font-bold pointer-events-none'
-            }
+            className={'uppercase absolute -top-2 left-2 bg-white px-1 text-xs font-bold pointer-events-none'}
           >
             {props.label}
           </label>
@@ -50,10 +48,7 @@ export default function MyCombobox(props: any) {
           autoComplete="off"
           className={
             'appearance-none hover:appearance-none w-auto border px-3 py-2 text-sm font-medium rounded leading-5 text-gray-900 focus:ring-0 ' +
-            (props.error != true &&
-              props.required &&
-              props?.error?.includes(props.name) &&
-              'ring-red-500 ring-2')
+            (props.error != true && props.required && props?.error?.includes(props.name) && 'ring-red-500 ring-2')
           }
           displayValue={(element: any) => element?.[props.options || 'name']}
           onChange={(event) => setQuery(event.target.value)}
@@ -69,18 +64,13 @@ export default function MyCombobox(props: any) {
               }}
             />
           ) : (
-            <SelectorIcon
-              className="h-5 w-5 text-gray-400"
-              aria-hidden="true"
-            />
+            <SelectorIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
           )}
         </Combobox.Button>
 
         <Combobox.Options className="z-50 appearance-none absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
           {filteredArray(props).length === 0 && query !== '' ? (
-            <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
-              Nothing found.
-            </div>
+            <div className="relative cursor-default select-none py-2 px-4 text-gray-700">Nothing found.</div>
           ) : (
             filteredArray(props).map((el: any) => (
               <Combobox.Option
@@ -94,11 +84,7 @@ export default function MyCombobox(props: any) {
               >
                 {({ selected, active }) => (
                   <>
-                    <span
-                      className={`block truncate ${
-                        selected ? 'font-medium' : 'font-normal'
-                      }`}
-                    >
+                    <span className={`block truncate ${selected ? 'font-medium' : 'font-normal'}`}>
                       {el[props.options || 'name']}
                     </span>
                     {selected ? (

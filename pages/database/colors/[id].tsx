@@ -39,10 +39,7 @@ const Mold: React.FC<Props> = (props) => {
 
   // whitelist combobox results - current & existing companies excluded
   const surfaces = useDeferredValue(
-    deferredSurfaces.filter(
-      (ar: any) =>
-        !deferredColors?.surfaces?.find((rm: any) => rm.surface === ar.surface)
-    )
+    deferredSurfaces.filter((ar: any) => !deferredColors?.surfaces?.find((rm: any) => rm.surface === ar.surface))
   )
 
   const addSurface = async (event: any) => {
@@ -114,30 +111,16 @@ const Mold: React.FC<Props> = (props) => {
         </p>
 
         <div className="border-t mt-6 pt-6">
-          <form
-            onSubmit={addSurface}
-            className="flex gap-2 items-center justify-start"
-          >
-            <MyCombobox
-              array={surfaces}
-              name={'surface'}
-              label={'Surface'}
-              required={true}
-              options="surface"
-            />
+          <form onSubmit={addSurface} className="flex gap-2 items-center justify-start">
+            <MyCombobox array={surfaces} name={'surface'} label={'Surface'} required={true} options="surface" />
             <Button>Connect to Surface</Button>
           </form>
           <div className="mt-6 border-t pt-6 pb-3">
             <p className="font-bold">Surfaces:</p>
           </div>
           {deferredColors?.surfaces?.map((el: any) => (
-            <div
-              key={el.id}
-              className="flex gap-2 pb-2 items-center justify-start"
-            >
-              <Button onClick={(event: any) => deleteSurface(event, el.id)}>
-                Remove
-              </Button>
+            <div key={el.id} className="flex gap-2 pb-2 items-center justify-start">
+              <Button onClick={(event: any) => deleteSurface(event, el.id)}>Remove</Button>
               <p>{el.surface}</p>
             </div>
           ))}

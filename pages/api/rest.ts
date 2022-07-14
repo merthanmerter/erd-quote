@@ -2,10 +2,7 @@ import setHeaders from '@lib/header'
 import { prisma } from '@prisma/lib/prisma'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { method, body } = req
   const { data, table } = body
 

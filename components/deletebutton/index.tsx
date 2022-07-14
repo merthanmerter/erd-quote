@@ -32,11 +32,7 @@ const DeleteButton: React.FC<Props> = ({ data, table }) => {
     }
   }
 
-  return (
-    <Button onClick={(event: any) => deleteCustomer(event, data.id)}>
-      Delete
-    </Button>
-  )
+  return <Button onClick={(event: any) => deleteCustomer(event, data.id)}>Delete</Button>
 }
 
 export default DeleteButton

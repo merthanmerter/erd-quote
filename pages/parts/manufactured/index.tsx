@@ -86,14 +86,7 @@ const ManufacturedParts: React.FC<Props> = (props) => {
       <main className="container">
         <InputGroup
           data={{
-            id: [
-              'moldsId',
-              'profileLength',
-              'alloysId',
-              'surfacesId',
-              'colorsId',
-              'drawing',
-            ],
+            id: ['moldsId', 'profileLength', 'alloysId', 'surfacesId', 'colorsId', 'drawing'],
             table: 'manufactured',
             inputs: [
               {

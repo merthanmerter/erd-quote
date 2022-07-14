@@ -66,9 +66,7 @@ const Manufactured: React.FC<Props> = (props) => {
           <p className="">
             <span className="font-bold mr-2">Drawing:</span>
             <Link href="#">
-              <a className="hover:underline">
-                {deferredManufactured.drawingsId}
-              </a>
+              <a className="hover:underline">{deferredManufactured.drawingsId}</a>
             </Link>
           </p>
           <p className="">

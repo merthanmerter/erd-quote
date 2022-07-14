@@ -14,9 +14,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     userRole: '',
   })
   return (
-    <AuthContext.Provider value={{ auth, setAuth }}>
-      {!auth.authorized ? <Login /> : children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={{ auth, setAuth }}>{!auth.authorized ? <Login /> : children}</AuthContext.Provider>
   )
 }
 

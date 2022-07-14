@@ -16,10 +16,7 @@ if (!self.define) {
       })
   )
   self.define = (n, c) => {
-    const i =
-      e ||
-      ('document' in self ? document.currentScript.src : '') ||
-      location.href
+    const i = e || ('document' in self ? document.currentScript.src : '') || location.href
     if (s[i]) return
     let t = {}
     const r = (e) => a(e, i),
@@ -174,12 +171,7 @@ define(['./workbox-5f5b08d6'], function (e) {
         cacheName: 'start-url',
         plugins: [
           {
-            cacheWillUpdate: async ({
-              request: e,
-              response: s,
-              event: a,
-              state: n,
-            }) =>
+            cacheWillUpdate: async ({ request: e, response: s, event: a, state: n }) =>
               s && 'opaqueredirect' === s.type
                 ? new Response(s.body, {
                     status: 200,
@@ -196,9 +188,7 @@ define(['./workbox-5f5b08d6'], function (e) {
       /^https:\/\/fonts\.(?:gstatic)\.com\/.*/i,
       new e.CacheFirst({
         cacheName: 'google-fonts-webfonts',
-        plugins: [
-          new e.ExpirationPlugin({ maxEntries: 4, maxAgeSeconds: 31536e3 }),
-        ],
+        plugins: [new e.ExpirationPlugin({ maxEntries: 4, maxAgeSeconds: 31536e3 })],
       }),
       'GET'
     ),
@@ -206,9 +196,7 @@ define(['./workbox-5f5b08d6'], function (e) {
       /^https:\/\/fonts\.(?:googleapis)\.com\/.*/i,
       new e.StaleWhileRevalidate({
         cacheName: 'google-fonts-stylesheets',
-        plugins: [
-          new e.ExpirationPlugin({ maxEntries: 4, maxAgeSeconds: 604800 }),
-        ],
+        plugins: [new e.ExpirationPlugin({ maxEntries: 4, maxAgeSeconds: 604800 })],
       }),
       'GET'
     ),
@@ -216,9 +204,7 @@ define(['./workbox-5f5b08d6'], function (e) {
       /\.(?:eot|otf|ttc|ttf|woff|woff2|font.css)$/i,
       new e.StaleWhileRevalidate({
         cacheName: 'static-font-assets',
-        plugins: [
-          new e.ExpirationPlugin({ maxEntries: 4, maxAgeSeconds: 604800 }),
-        ],
+        plugins: [new e.ExpirationPlugin({ maxEntries: 4, maxAgeSeconds: 604800 })],
       }),
       'GET'
     ),
@@ -226,9 +212,7 @@ define(['./workbox-5f5b08d6'], function (e) {
       /\.(?:jpg|jpeg|gif|png|svg|ico|webp)$/i,
       new e.StaleWhileRevalidate({
         cacheName: 'static-image-assets',
-        plugins: [
-          new e.ExpirationPlugin({ maxEntries: 64, maxAgeSeconds: 86400 }),
-        ],
+        plugins: [new e.ExpirationPlugin({ maxEntries: 64, maxAgeSeconds: 86400 })],
       }),
       'GET'
     ),
@@ -236,9 +220,7 @@ define(['./workbox-5f5b08d6'], function (e) {
       /\/_next\/image\?url=.+$/i,
       new e.StaleWhileRevalidate({
         cacheName: 'next-image',
-        plugins: [
-          new e.ExpirationPlugin({ maxEntries: 64, maxAgeSeconds: 86400 }),
-        ],
+        plugins: [new e.ExpirationPlugin({ maxEntries: 64, maxAgeSeconds: 86400 })],
       }),
       'GET'
     ),
@@ -246,10 +228,7 @@ define(['./workbox-5f5b08d6'], function (e) {
       /\.(?:mp3|wav|ogg)$/i,
       new e.CacheFirst({
         cacheName: 'static-audio-assets',
-        plugins: [
-          new e.RangeRequestsPlugin(),
-          new e.ExpirationPlugin({ maxEntries: 32, maxAgeSeconds: 86400 }),
-        ],
+        plugins: [new e.RangeRequestsPlugin(), new e.ExpirationPlugin({ maxEntries: 32, maxAgeSeconds: 86400 })],
       }),
       'GET'
     ),
@@ -257,10 +236,7 @@ define(['./workbox-5f5b08d6'], function (e) {
       /\.(?:mp4)$/i,
       new e.CacheFirst({
         cacheName: 'static-video-assets',
-        plugins: [
-          new e.RangeRequestsPlugin(),
-          new e.ExpirationPlugin({ maxEntries: 32, maxAgeSeconds: 86400 }),
-        ],
+        plugins: [new e.RangeRequestsPlugin(), new e.ExpirationPlugin({ maxEntries: 32, maxAgeSeconds: 86400 })],
       }),
       'GET'
     ),
@@ -268,9 +244,7 @@ define(['./workbox-5f5b08d6'], function (e) {
       /\.(?:js)$/i,
       new e.StaleWhileRevalidate({
         cacheName: 'static-js-assets',
-        plugins: [
-          new e.ExpirationPlugin({ maxEntries: 32, maxAgeSeconds: 86400 }),
-        ],
+        plugins: [new e.ExpirationPlugin({ maxEntries: 32, maxAgeSeconds: 86400 })],
       }),
       'GET'
     ),
@@ -278,9 +252,7 @@ define(['./workbox-5f5b08d6'], function (e) {
       /\.(?:css|less)$/i,
       new e.StaleWhileRevalidate({
         cacheName: 'static-style-assets',
-        plugins: [
-          new e.ExpirationPlugin({ maxEntries: 32, maxAgeSeconds: 86400 }),
-        ],
+        plugins: [new e.ExpirationPlugin({ maxEntries: 32, maxAgeSeconds: 86400 })],
       }),
       'GET'
     ),
@@ -288,9 +260,7 @@ define(['./workbox-5f5b08d6'], function (e) {
       /\/_next\/data\/.+\/.+\.json$/i,
       new e.StaleWhileRevalidate({
         cacheName: 'next-data',
-        plugins: [
-          new e.ExpirationPlugin({ maxEntries: 32, maxAgeSeconds: 86400 }),
-        ],
+        plugins: [new e.ExpirationPlugin({ maxEntries: 32, maxAgeSeconds: 86400 })],
       }),
       'GET'
     ),
@@ -298,9 +268,7 @@ define(['./workbox-5f5b08d6'], function (e) {
       /\.(?:json|xml|csv)$/i,
       new e.NetworkFirst({
         cacheName: 'static-data-assets',
-        plugins: [
-          new e.ExpirationPlugin({ maxEntries: 32, maxAgeSeconds: 86400 }),
-        ],
+        plugins: [new e.ExpirationPlugin({ maxEntries: 32, maxAgeSeconds: 86400 })],
       }),
       'GET'
     ),
@@ -313,9 +281,7 @@ define(['./workbox-5f5b08d6'], function (e) {
       new e.NetworkFirst({
         cacheName: 'apis',
         networkTimeoutSeconds: 10,
-        plugins: [
-          new e.ExpirationPlugin({ maxEntries: 16, maxAgeSeconds: 86400 }),
-        ],
+        plugins: [new e.ExpirationPlugin({ maxEntries: 16, maxAgeSeconds: 86400 })],
       }),
       'GET'
     ),
@@ -327,9 +293,7 @@ define(['./workbox-5f5b08d6'], function (e) {
       new e.NetworkFirst({
         cacheName: 'others',
         networkTimeoutSeconds: 10,
-        plugins: [
-          new e.ExpirationPlugin({ maxEntries: 32, maxAgeSeconds: 86400 }),
-        ],
+        plugins: [new e.ExpirationPlugin({ maxEntries: 32, maxAgeSeconds: 86400 })],
       }),
       'GET'
     ),
@@ -338,9 +302,7 @@ define(['./workbox-5f5b08d6'], function (e) {
       new e.NetworkFirst({
         cacheName: 'cross-origin',
         networkTimeoutSeconds: 10,
-        plugins: [
-          new e.ExpirationPlugin({ maxEntries: 32, maxAgeSeconds: 3600 }),
-        ],
+        plugins: [new e.ExpirationPlugin({ maxEntries: 32, maxAgeSeconds: 3600 })],
       }),
       'GET'
     )
