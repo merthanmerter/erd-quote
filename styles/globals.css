@@ -3,25 +3,25 @@
 @tailwind utilities;
 
 @layer base {
-	#__next {
-		@apply flex min-h-screen flex-col justify-between text-zinc-600;
-	}
+  #__next {
+    @apply flex min-h-screen flex-col justify-between text-zinc-600;
+  }
 
-	body {
-		@apply overflow-y-scroll;
-	}
+  body {
+    @apply overflow-y-scroll;
+  }
 
-	main {
-		@apply mb-auto flex-1 lg:pt-0;
-	}
+  main {
+    @apply mb-auto flex-1 lg:pt-0;
+  }
 
-	.link {
-		@apply hover:underline !text-blue-600;
-	}
+  .link {
+    @apply hover:underline !text-blue-600;
+  }
 }
 
 input[type='number']::-webkit-inner-spin-button,
 input[type='number']::-webkit-outer-spin-button {
-	-webkit-appearance: none;
-	margin: 0;
+  -webkit-appearance: none;
+  margin: 0;
 }

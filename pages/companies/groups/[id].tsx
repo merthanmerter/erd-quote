@@ -3,39 +3,39 @@ import { GetServerSideProps } from 'next'
 import React from 'react'
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-	const id: any = query.id!
+  const id: any = query.id!
 
-	const array = await prisma.groups.findUnique({
-		where: { id: id },
-	})
+  const array = await prisma.groups.findUnique({
+    where: { id: id },
+  })
 
-	return {
-		props: {
-			array: JSON.stringify(array),
-		},
-	}
+  return {
+    props: {
+      array: JSON.stringify(array),
+    },
+  }
 }
 
 type Props = {
-	array: any
+  array: any
 }
 
 const Group: React.FC<Props> = (props) => {
-	const [array, setArray] = React.useState<any>({
-		id: '',
-		createdAt: '',
-		company: '',
-	})
+  const [array, setArray] = React.useState<any>({
+    id: '',
+    createdAt: '',
+    company: '',
+  })
 
-	React.useEffect(() => {
-		setArray(JSON.parse(props.array))
-	}, [props])
+  React.useEffect(() => {
+    setArray(JSON.parse(props.array))
+  }, [props])
 
-	return (
-		<main className='container'>
-			<h1 className='uppercase'>{array.id}</h1>
-		</main>
-	)
+  return (
+    <main className="container">
+      <h1 className="uppercase">{array.id}</h1>
+    </main>
+  )
 }
 
 export default Group
