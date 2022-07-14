@@ -6,7 +6,7 @@ import { GetServerSideProps } from 'next'
 import Head from 'next/head'
 import React, { useDeferredValue } from 'react'
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+export const getServerSideProps: GetServerSideProps = async () => {
 	const purchased = await prisma['purchased'].findMany({})
 
 	return {

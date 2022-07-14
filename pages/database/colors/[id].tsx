@@ -6,11 +6,7 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React, { useDeferredValue } from 'react'
 
-export const getServerSideProps: GetServerSideProps = async ({
-	req,
-	res,
-	query,
-}) => {
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 	const id: any = query.id!
 
 	const colors = await prisma.colors.findUnique({
@@ -133,7 +129,7 @@ const Mold: React.FC<Props> = (props) => {
 					<div className='mt-6 border-t pt-6 pb-3'>
 						<p className='font-bold'>Surfaces:</p>
 					</div>
-					{deferredColors?.surfaces?.map((el: any, key: string) => (
+					{deferredColors?.surfaces?.map((el: any) => (
 						<div
 							key={el.id}
 							className='flex gap-2 pb-2 items-center justify-start'>

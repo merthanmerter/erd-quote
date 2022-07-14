@@ -1,20 +1,10 @@
-import {
-	calcExtPrice,
-	calcFabricationCost,
-	calcSurfaceCost,
-} from '@lib/calcCosts'
 import { prisma } from '@prisma/lib/prisma'
 import { GetServerSideProps } from 'next'
-import { setConfig } from 'next/config'
 import Head from 'next/head'
 import Link from 'next/link'
-import React, { useDeferredValue, useState } from 'react'
+import React, { useDeferredValue } from 'react'
 
-export const getServerSideProps: GetServerSideProps = async ({
-	req,
-	res,
-	query,
-}) => {
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 	const id: any = query.id!
 
 	const manufactured = await prisma.manufactured.findUnique({

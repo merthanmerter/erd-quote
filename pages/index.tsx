@@ -1,6 +1,6 @@
-import AuthContext from 'context/Auth'
+// import AuthContext from 'context/Auth'
 import type { NextPage } from 'next'
-import { useContext } from 'react'
+// import { useContext } from 'react'
 
 const Home: NextPage = () => {
 	// const { auth }: any = useContext(AuthContext)

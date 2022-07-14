@@ -5,11 +5,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import React, { useDeferredValue } from 'react'
 
-export const getServerSideProps: GetServerSideProps = async ({
-	req,
-	res,
-	query,
-}) => {
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 	const id: any = query.id!
 
 	const projects = await prisma['projects'].findUnique({
@@ -82,7 +78,7 @@ const Company: React.FC<Props> = (props) => {
 								Bill of Materials
 							</span>
 						</div>
-						{deferredProjects?.products?.map((el: any, key: string) => (
+						{deferredProjects?.products?.map((el: any) => (
 							<div key={el.id} className='mb-4'>
 								<p className='font-bold'>
 									{'PRD' +

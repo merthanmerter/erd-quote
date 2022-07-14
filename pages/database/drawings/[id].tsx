@@ -3,11 +3,7 @@ import { GetServerSideProps } from 'next'
 import Head from 'next/head'
 import React, { useDeferredValue } from 'react'
 
-export const getServerSideProps: GetServerSideProps = async ({
-	req,
-	res,
-	query,
-}) => {
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 	const id: any = query.id!
 
 	const drawings = await prisma.drawings.findUnique({

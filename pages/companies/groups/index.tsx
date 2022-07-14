@@ -8,7 +8,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import React, { useDeferredValue } from 'react'
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+export const getServerSideProps: GetServerSideProps = async () => {
 	const groups = await prisma['groups'].findMany({
 		include: { industry: true, companies: true },
 	})
@@ -75,7 +75,7 @@ const Groups: React.FC<Props> = (props) => {
 								required: true,
 								autoComplete: true,
 								acArray: deferredIndustries,
-								options: 'name'
+								options: 'name',
 							},
 							{ id: 'address', label: 'Address', required: true },
 						],

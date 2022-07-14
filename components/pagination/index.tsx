@@ -1,5 +1,5 @@
 import React from 'react'
 const Pagination = (props: any) => {
-	return <div></div>
+	return <div>{props}</div>
 }
 export default Pagination

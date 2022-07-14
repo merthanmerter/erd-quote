@@ -6,38 +6,32 @@ export default function MyCombobox(props: any) {
 	const [selected, setSelected] = useState('')
 	const [query, setQuery] = useState('')
 
-	// const filteredArray =
-	// 	query === ''
-	// 		? props.array
-	// 		: props.array.filter((element: any) =>
-	// 				element.name
-	// 					.toLowerCase()
-	// 					.replace(/\s+/g, '')
-	// 					.includes(query.toLowerCase().replace(/\s+/g, ''))
-	// 		  )
+	const filteredArray = (props: any) => {
+		if (query === '') {
+			return props?.['array']
+		} else {
+			return props?.['array'].filter((element: any) => {
+				const input = element[props?.['options'] || 'name']
+				if (props?.['type'] == 'number') {
+					return input
+				} else {
+					return input.toLowerCase().includes(query.toLowerCase())
+				}
+			})
+		}
+	}
 
-	const filteredArray =
-		query === ''
-			? props.array
-			: props.array.filter((element: any) => {
-					const input = element[props.options || 'name']
-					return props.type == 'number'
-						? input
-						: input.toLowerCase().includes(query.toLowerCase())
-			  })
+	const handleChange = (event: any) => {
+		if (selected) {
+			setQuery('')
+			setSelected('')
+		} else {
+			setSelected(event)
+		}
+	}
 
 	return (
-		<Combobox
-			value={selected}
-			onChange={
-				selected
-					? () => {
-							setQuery('')
-							setSelected('')
-					  }
-					: setSelected
-			}
-			nullable={true}>
+		<Combobox value={selected} onChange={handleChange} nullable={true}>
 			<div className='relative'>
 				{props.label && (
 					<label
@@ -82,12 +76,12 @@ export default function MyCombobox(props: any) {
 				</Combobox.Button>
 
 				<Combobox.Options className='z-50 appearance-none absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm'>
-					{filteredArray.length === 0 && query !== '' ? (
+					{filteredArray(props).length === 0 && query !== '' ? (
 						<div className='relative cursor-default select-none py-2 px-4 text-gray-700'>
 							Nothing found.
 						</div>
 					) : (
-						filteredArray.map((el: any) => (
+						filteredArray(props).map((el: any) => (
 							<Combobox.Option
 								key={el.id}
 								className={({ active }) =>

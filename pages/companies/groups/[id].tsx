@@ -2,16 +2,7 @@ import { prisma } from '@prisma/lib/prisma'
 import { GetServerSideProps } from 'next'
 import React from 'react'
 
-export const getServerSideProps: GetServerSideProps = async ({
-	req,
-	res,
-	query,
-}) => {
-	res.setHeader(
-		'Cache-Control',
-		'public, s-maxage=43200, stale-while-revalidate=60'
-	)
-
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 	const id: any = query.id!
 
 	const array = await prisma.groups.findUnique({

@@ -4,19 +4,17 @@ import { prisma } from '@prisma/lib/prisma'
 import fetcher from '@lib/fetcher'
 import useSWR from 'swr'
 
-export const getServerSideProps: GetServerSideProps = async ({
-	req,
-	res,
-	query,
-}) => {
-	const projects = await prisma['projects'].findMany({})
+export const getServerSideProps: GetServerSideProps = async () =>
+	//
+	{
+		const projects = await prisma['projects'].findMany({})
 
-	return {
-		props: {
-			projects: JSON.stringify(projects),
-		},
+		return {
+			props: {
+				projects: JSON.stringify(projects),
+			},
+		}
 	}
-}
 type Props = {
 	projects: any
 }
@@ -26,10 +24,11 @@ const NewInquiry: React.FC<Props> = (props) => {
 
 	const [project, setProject] = useState('')
 
-	const { data, isValidating, error } = useSWR(
-		project ? `/api/projects/${project}` : null,
-		fetcher
-	)
+	const {
+		data,
+		// isValidating,
+		// error
+	} = useSWR(project ? `/api/projects/${project}` : null, fetcher)
 
 	return (
 		<main className='container'>

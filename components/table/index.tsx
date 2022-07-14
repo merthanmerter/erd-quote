@@ -1,3 +1,5 @@
+import React from 'react'
+
 type Props = {
 	columns: { id: number; title: string }[]
 	rows: any
@@ -5,7 +7,7 @@ type Props = {
 
 const Table: React.FC<Props> = (props) => {
 	return (
-		<div className="overflow-x-auto pt-4">
+		<div className='overflow-x-auto pt-4'>
 			<table className='text-left w-full whitespace-nowrap'>
 				<thead>
 					<tr>

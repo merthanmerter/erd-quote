@@ -8,7 +8,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import React, { useDeferredValue } from 'react'
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+export const getServerSideProps: GetServerSideProps = async () => {
 	const manufactured = await prisma['manufactured'].findMany({
 		orderBy: { createdAt: 'desc' },
 	})

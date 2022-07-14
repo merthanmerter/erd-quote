@@ -104,13 +104,13 @@ const InputGroup: React.FC<Props> = ({ data }) => {
 
 export default InputGroup
 
-type Alert = {
+type AlertProps = {
 	children: string
 	type: string
 	pop: boolean
 }
 
-const Alert: React.FC<Alert> = (props: any) => {
+const Alert: React.FC<AlertProps> = (props: any) => {
 	if (props.pop) {
 		return (
 			<div
@@ -129,14 +129,14 @@ const Alert: React.FC<Alert> = (props: any) => {
 	}
 }
 
-type Input = {
+type InputProps = {
 	label?: string
 	name: string
 	type?: string
 	error?: any
 	required?: boolean
 }
-const Input: React.FC<Input> = (props) => {
+const Input: React.FC<InputProps> = (props) => {
 	const [value, setValue] = React.useState('')
 
 	const handleEdit = (event: any) => {

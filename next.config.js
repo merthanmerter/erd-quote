@@ -4,9 +4,7 @@ const withPWA = require('next-pwa')
 
 const nextConfig = withPWA({
 	reactStrictMode: true,
-	experimental: {
-		outputStandalone: true,
-	},
+	output: 'standalone',
 	pwa: {
 		dest: 'public',
 		register: true,

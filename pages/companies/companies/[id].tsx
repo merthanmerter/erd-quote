@@ -1,6 +1,5 @@
 import Button from '@components/button'
 import DeleteButton from '@components/deletebutton'
-import InputGroup from '@components/inputGroup'
 import Table from '@components/table'
 import { prisma } from '@prisma/lib/prisma'
 import { GetServerSideProps } from 'next'
@@ -8,11 +7,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import React, { useDeferredValue } from 'react'
 
-export const getServerSideProps: GetServerSideProps = async ({
-	req,
-	res,
-	query,
-}) => {
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 	const id: any = query.id!
 
 	const companies = await prisma['companies'].findUnique({
@@ -99,7 +94,7 @@ const Company: React.FC<Props> = (props) => {
 					</div>
 					<div className='mt-6 border-t pt-6'>
 						<p className='font-bold pb-2'>Molds:</p>
-						{deferredCompanies?.molds?.map((el: any, key: string) => (
+						{deferredCompanies?.molds?.map((el: any) => (
 							<Link key={el.id} href={`/database/molds/${el.id}`}>
 								<a className='hover:underline py-1 px-2 rounded-md bg-zinc-600 text-white font-bold mr-2'>
 									{el.moldNo}
@@ -109,7 +104,7 @@ const Company: React.FC<Props> = (props) => {
 					</div>
 					<div className='mt-6 border-t pt-6'>
 						<p className='font-bold pb-2'>Whitelisted Molds:</p>
-						{deferredCompanies?.whitelist?.map((el: any, key: string) => (
+						{deferredCompanies?.whitelist?.map((el: any) => (
 							<Link key={el.id} href={`/database/molds/${el.molds.id}`}>
 								<a className='hover:underline py-1 px-2 rounded-md bg-zinc-600 text-white font-bold mr-2'>
 									{el.moldNo}
