@@ -4,7 +4,7 @@ import { prisma } from '@prisma/lib/prisma'
 import fetcher from '@lib/fetcher'
 import useSWR from 'swr'
 
-export const getServerSideProps: GetServerSideProps = async () =>
+export const getServerSideProps: GetServerSideProps = async ({ req }) =>
   //
   {
     const projects = await prisma['projects'].findMany({})
