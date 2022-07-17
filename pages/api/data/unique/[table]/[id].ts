@@ -45,8 +45,8 @@ const tables: any = {
         include: {
           products: {
             orderBy: { createdAt: 'desc' },
-          }
-        }
+          },
+        },
       },
     },
   },
@@ -67,10 +67,11 @@ const tables: any = {
     include: {
       companies: {
         include: {
-          molds: true, whitelist: {
-            include: { molds: true }
-          }
-        }
+          molds: true,
+          whitelist: {
+            include: { molds: true },
+          },
+        },
       },
       products: {
         include: {
@@ -91,7 +92,7 @@ const tables: any = {
   products: {
     include: {
       projects: true,
-      bom: true
+      bom: true,
     },
   },
 }

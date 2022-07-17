@@ -29,9 +29,12 @@ const tables: any = {
   companies: {
     orderBy: { createdAt: 'desc' },
     include: {
-      industry: true, molds: true, whitelist: true, projects: {
-        include: { products: true }
-      }
+      industry: true,
+      molds: true,
+      whitelist: true,
+      projects: {
+        include: { products: true },
+      },
     },
   },
   groups: {
@@ -59,35 +62,38 @@ const tables: any = {
     include: { colors: true, manufactured: true },
   },
   manufactured: {
-    orderBy: { createdAt: 'desc', },
-    include: { bom: true }
+    orderBy: { createdAt: 'desc' },
+    include: { bom: true },
   },
   purchased: {
     orderBy: { createdAt: 'desc' },
-    include: { bom: true }
+    include: { bom: true },
   },
   products: {
     orderBy: { createdAt: 'desc' },
     include: {
-      projects: true, bom: {
-        include: { manufactured: true, purchased: true }
-      }
-    }
+      projects: true,
+      bom: {
+        include: { manufactured: true, purchased: true },
+      },
+    },
   },
   alloys: {
     orderBy: { createdAt: 'desc' },
-    include: { manufactured: true }
+    include: { manufactured: true },
   },
   projects: {
     orderBy: { createdAt: 'desc' },
     include: {
-      products: true, companies: {
+      products: true,
+      companies: {
         include: {
-          molds: true, whitelist: {
-            include: { molds: true }
-          }
-        }
-      }
-    }
-  }
+          molds: true,
+          whitelist: {
+            include: { molds: true },
+          },
+        },
+      },
+    },
+  },
 }
