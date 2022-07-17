@@ -1,5 +1,5 @@
-import DeleteButton from '@components/deletebutton'
-import InputGroup from '@components/inputGroup'
+import DeleteButton from '@components/DeleteButton'
+import InputGroup from '@components/InputGroup'
 import PrimaryLayout from '@components/layouts/primary'
 import Table from '@components/table'
 import useFetchData from 'hooks/useFetchData'
@@ -13,17 +13,19 @@ const SurfacesPage: NextPageWithLayout = () => {
     { id: 1, title: 'Surface' },
     { id: 3, title: 'Description' },
     { id: 4, title: 'Colors' },
-    { id: 5, title: 'Created At' },
+    { id: 5, title: 'Parts' },
+    { id: 6, title: 'Created At' },
   ]
 
   const rows = surfaces?.map((el: any, key: number) => (
     <tr key={el.id} className={key % 2 ? '' : 'bg-gray-100'}>
       <td className="p-2 flex gap-2">
-        <DeleteButton mutate={mutate} table="surfaces" data={el} />
+        <DeleteButton disabled={el.manufactured.length} mutate={mutate} table="surfaces" data={el} />
       </td>
       <td className="p-2">{el.surface}</td>
       <td className="p-2">{el.description}</td>
       <td className="p-2">{el.colors.length}</td>
+      <td className="p-2">{el.manufactured.length}</td>
       <td className="p-2">{new Date(el.createdAt).toLocaleDateString()}</td>
     </tr>
   ))

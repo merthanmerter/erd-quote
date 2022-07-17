@@ -1,6 +1,6 @@
 import EditButton from '@components/buttons/edit'
-import DeleteButton from '@components/deletebutton'
-import InputGroup from '@components/inputGroup'
+import DeleteButton from '@components/DeleteButton'
+import InputGroup from '@components/InputGroup'
 import PrimaryLayout from '@components/layouts/primary'
 import Table from '@components/table'
 import useFetchData from 'hooks/useFetchData'
@@ -21,7 +21,7 @@ const ProjectsPage: NextPageWithLayout = () => {
   const rows = projects?.map((el: any, key: number) => (
     <tr key={el.id} className={key % 2 ? '' : 'bg-gray-100'}>
       <td className="p-2 flex gap-2">
-        <EditButton href={`/projects/projects/${el.id}`} />
+        <EditButton href={`/companies/projects/${el.id}`} />
         <DeleteButton mutate={mutate} table="projects" data={el} />
       </td>
       <td className="p-2">{el.companiesId}</td>

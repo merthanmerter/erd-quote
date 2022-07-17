@@ -1,6 +1,6 @@
 import EditButton from '@components/buttons/edit'
-import DeleteButton from '@components/deletebutton'
-import InputGroup from '@components/inputGroup'
+import DeleteButton from '@components/DeleteButton'
+import InputGroup from '@components/InputGroup'
 import PrimaryLayout from '@components/layouts/primary'
 import Table from '@components/table'
 import useFetchData from 'hooks/useFetchData'
@@ -17,19 +17,23 @@ const CompaniesPage: NextPageWithLayout = () => {
     { id: 2, title: 'Company Name' },
     { id: 3, title: 'Industry' },
     { id: 4, title: 'Address' },
-    { id: 5, title: 'Created At' },
+    { id: 5, title: 'Molds' },
+    { id: 6, title: 'Projects' },
+    { id: 7, title: 'Created At' },
   ]
 
   const rows = companies?.map((el: any, key: number) => (
     <tr key={el.id} className={key % 2 ? '' : 'bg-gray-100'}>
       <td className="p-2 flex gap-2">
         <EditButton href={`/companies/companies/${el.id}`} />
-        <DeleteButton mutate={mutate} table="companies" data={el} />
+        <DeleteButton disabled={el.molds.length || el.projects.length} mutate={mutate} table="companies" data={el} />
       </td>
       <td className="p-2">{el.groupsId || 'None'}</td>
       <td className="p-2">{el.name}</td>
       <td className="p-2">{el.industriesId}</td>
       <td className="p-2">{el.address}</td>
+      <td className="p-2">{el.molds.length + el.whitelist.length}</td>
+      <td className="p-2">{el.projects.length}</td>
       <td className="p-2">{new Date(el.createdAt).toLocaleDateString()}</td>
     </tr>
   ))

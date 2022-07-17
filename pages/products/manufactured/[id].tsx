@@ -11,7 +11,7 @@ const ManufacturedPartPage: NextPageWithLayout = () => {
       <div>
         <p className="">
           <span className="font-bold mr-2">Part Id:</span>
-          {manufactured?.id.toUpperCase()}
+          {manufactured?.id}
         </p>
         <p className="">
           <span className="font-bold mr-2">Mold No:</span>

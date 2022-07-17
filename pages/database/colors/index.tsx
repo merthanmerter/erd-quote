@@ -1,6 +1,6 @@
 import EditButton from '@components/buttons/edit'
-import DeleteButton from '@components/deletebutton'
-import InputGroup from '@components/inputGroup'
+import DeleteButton from '@components/DeleteButton'
+import InputGroup from '@components/InputGroup'
 import PrimaryLayout from '@components/layouts/primary'
 import Table from '@components/table'
 import useFetchData from 'hooks/useFetchData'
@@ -21,7 +21,7 @@ const ColorsPage: NextPageWithLayout = () => {
     <tr key={el.id} className={key % 2 ? '' : 'bg-gray-100'}>
       <td className="p-2 flex gap-2">
         <EditButton href={`/database/colors/${el.id}`} />
-        <DeleteButton mutate={mutate} table="colors" data={el} />
+        <DeleteButton disabled={el.surfaces.length} mutate={mutate} table="colors" data={el} />
       </td>
       <td className="p-2">{el.color}</td>
       <td className="p-2">{el.description}</td>

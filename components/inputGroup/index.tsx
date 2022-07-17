@@ -21,7 +21,17 @@ const InputGroup: React.FC<Props> = ({ data, mutate }) => {
       if (data?.inputs?.[i]?.required == true && input?.value == 0) {
         errorData.push(input['name'])
       } else {
-        tempData[data.inputs[i]?.id] = input?.type == 'number' ? +input?.value || null : input?.value || null
+        let val
+        if (data?.inputs?.[i]?.type === 'decimal') {
+          val = (+input?.value).toFixed(2)
+        }
+        if (data?.inputs?.[i]?.type === 'number') {
+          val = +input?.value
+        }
+        if (!data?.inputs?.[i]?.type || typeof data?.inputs?.[i]?.type === 'undefined') {
+          val = String(input?.value)
+        }
+        tempData[data.inputs[i]?.id] = val
       }
     }
 
@@ -29,7 +39,7 @@ const InputGroup: React.FC<Props> = ({ data, mutate }) => {
     let idMerge: any = []
     for (let i in data.id) {
       const input = event?.target?.[data?.inputs?.[i]?.id]
-      idMerge.push(input.value.replace(/\s+/g, '-').toLowerCase())
+      idMerge.push(input.value.replace(/\s+/g, '-').toUpperCase())
     }
     const id = JSON.stringify(idMerge.join('-')).replace(/["']/g, '')
 
@@ -51,12 +61,13 @@ const InputGroup: React.FC<Props> = ({ data, mutate }) => {
           'Content-Type': 'application/json',
         },
       })
+      if (res.status == 409) {
+        setExists(true)
+        setError([])
+      }
       if (res.status < 300) {
         mutate()
         setExists(false)
-        setError([])
-      } else {
-        setExists(true)
         setError([])
       }
     }
@@ -64,9 +75,11 @@ const InputGroup: React.FC<Props> = ({ data, mutate }) => {
 
   return (
     <div className="">
-      {/* <Alert pop={exists} type={'error'}>
-        Something went wrong.
-      </Alert> */}
+      {exists && (
+        <div className="absolute left-0 bottom-0 m-2 p-2 bg-red-500 text-white font-bold rounded animate-bounce">
+          Conflict: Already exists.
+        </div>
+      )}
       <form className="flex gap-x-2 gap-y-4 items-center flex-wrap" onSubmit={createCustomer}>
         {data?.inputs?.map((el: any, key: any) =>
           el.autoComplete ? (
@@ -74,6 +87,7 @@ const InputGroup: React.FC<Props> = ({ data, mutate }) => {
               array={el.acArray}
               setExists={setExists}
               setError={setError}
+              setState={el.setState}
               exists={exists}
               error={error}
               key={key}
@@ -81,19 +95,20 @@ const InputGroup: React.FC<Props> = ({ data, mutate }) => {
               label={el.label}
               required={el.required}
               options={el.options}
-              type={el?.type}
-            />
+              type={el.type}
+            ></MyCombobox>
           ) : (
             <Input
               setExists={setExists}
               setError={setError}
+              setState={el.setState}
               exists={exists}
               error={error}
               key={key}
               name={el.id}
               label={el.label}
               required={el.required}
-              type={el?.type}
+              type={el.type}
             />
           )
         )}
@@ -105,37 +120,12 @@ const InputGroup: React.FC<Props> = ({ data, mutate }) => {
 
 export default InputGroup
 
-// type AlertProps = {
-//   children: string
-//   type: string
-//   pop: boolean
-// }
-
-// const Alert: React.FC<AlertProps> = (props: any) => {
-//   if (props.pop) {
-//     return (
-//       <div
-//         className={
-//           'w-full mb-6 font-bold p-2 rounded ' +
-//           (props.type == 'error' && ' text-red-600 bg-red-200 ') +
-//           (props.type == 'info' && ' text-blue-600 bg-blue-200 ') +
-//           (props.type == 'warning' && ' text-yellow-600 bg-yellow-200 ') +
-//           (props.type == 'success' && ' text-green-600 bg-green-200 ')
-//         }
-//       >
-//         {props.children}
-//       </div>
-//     )
-//   } else {
-//     return <></>
-//   }
-// }
-
 function Input(props: any) {
   const [value, setValue] = useState('')
 
-  const handleEdit = (event: any) => {
+  const handleChange = (event: any) => {
     setValue(event.target.value)
+    props.setState ? props.setState(event.target.value) : null
     props.setExists(false)
     props.setError([])
   }
@@ -151,11 +141,11 @@ function Input(props: any) {
         </label>
       )}
       <input
-        type={props.type || 'text'}
         id={props.name}
         name={props.name}
         value={value}
-        onChange={handleEdit}
+        onChange={handleChange}
+        type={props.type}
         autoComplete="off"
         className={
           'w-auto border px-3 py-2 text-sm font-medium rounded leading-5 text-gray-900 focus:ring-0 ' +

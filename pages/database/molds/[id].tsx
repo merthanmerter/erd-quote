@@ -2,6 +2,7 @@ import Button from '@components/buttons'
 import MyCombobox from '@components/combobox'
 import PrimaryLayout from '@components/layouts/primary'
 import Loading from '@components/loading'
+import { XIcon } from '@heroicons/react/solid'
 import useFetchData from 'hooks/useFetchData'
 import { NextPageWithLayout } from 'pages/page'
 import { useDeferredValue } from 'react'
@@ -101,12 +102,16 @@ const MoldPage: NextPageWithLayout = () => {
         <div className="mt-6 border-t pt-6 pb-3">
           <p className="font-bold">Whitelist:</p>
         </div>
-        {mold?.whitelist?.companies?.map((el: any) => (
-          <div key={el.id} className="flex gap-2 pb-2 items-center justify-start">
-            <Button onClick={(event: any) => deleteFromWhitelist(event, el.id)}>Remove</Button>
-            <p>{el.name}</p>
-          </div>
-        ))}
+        <div className="flex gap-2 w-full">
+          {mold?.whitelist?.companies?.map((el: any) => (
+            <div key={el.id} className="bg-zinc-300 flex gap-2 rounded-l text-sm items-center font-bold">
+              <div className="py-2 pl-4 pr-2">{el.name}</div>
+              <button className="bg-red-600 p-2 rounded-r" onClick={(event: any) => deleteFromWhitelist(event, el.id)}>
+                <XIcon className="h-6 w-6 text-white" />
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   )

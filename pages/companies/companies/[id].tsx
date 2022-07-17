@@ -1,29 +1,54 @@
 import EditButton from '@components/buttons/edit'
-import DeleteButton from '@components/deletebutton'
+import DeleteButton from '@components/DeleteButton'
 import PrimaryLayout from '@components/layouts/primary'
 import Table from '@components/table'
 import useFetchData from 'hooks/useFetchData'
-import Link from 'next/link'
 import { NextPageWithLayout } from 'pages/page'
 
 const CompanyPage: NextPageWithLayout = () => {
   const { data: companies, mutate } = useFetchData(`/api/data/unique/companies`, { findUnique: true })
 
-  const columns = [
+  const colsProjects = [
     { id: 0, title: 'Manage' },
     { id: 1, title: 'Project Name' },
     { id: 2, title: 'Project Description' },
-    { id: 3, title: 'Created At' },
+    { id: 3, title: 'Products' },
+    { id: 4, title: 'Created At' },
   ]
 
-  const rows = companies?.projects?.map((el: any, key: number) => (
+  const rowsProjects = companies?.projects?.map((el: any, key: number) => (
     <tr key={el.id} className={key % 2 ? '' : 'bg-gray-100'}>
       <td className="p-2 flex gap-2">
-        <EditButton href={`/projects/projects/${el.id}`} />
-        <DeleteButton mutate={mutate} table="companies" data={el} />
+        <EditButton href={`/companies/projects/${el.id}`} />
+        <DeleteButton mutate={mutate} table="projects" data={el} />
       </td>
       <td className="p-2">{el.name}</td>
       <td className="p-2">{el.description}</td>
+      <td className="p-2">{el.products.length}</td>
+      <td className="p-2">{new Date(el.createdAt).toLocaleDateString()}</td>
+    </tr>
+  ))
+
+  const colsMolds = [
+    { id: 0, title: 'Manage' },
+    { id: 1, title: 'Mold No' },
+    { id: 2, title: 'kg/m' },
+    { id: 3, title: 'Perimeter (mm)' },
+    { id: 4, title: 'Mold Type' },
+    { id: 5, title: 'Tool Cost' },
+    { id: 6, title: 'Created At' },
+  ]
+
+  const rowsMolds = companies?.molds.concat(companies?.whitelist)?.map((el: any, key: number) => (
+    <tr key={el.id} className={key % 2 ? '' : 'bg-gray-100'}>
+      <td className="p-2 flex gap-2">
+        <EditButton href={`/database/molds/${el.id}`} />
+      </td>
+      <td className="p-2">{el.moldNo || el.molds.moldNo}</td>
+      <td className="p-2">{el.kgm || el.molds.kgm}</td>
+      <td className="p-2">{el.perimeter || el.molds.perimeter}</td>
+      <td className="p-2">{el.moldType || el.molds.moldType}</td>
+      <td className="p-2">{el.toolCost || el.molds.toolCost}</td>
       <td className="p-2">{new Date(el.createdAt).toLocaleDateString()}</td>
     </tr>
   ))
@@ -52,23 +77,10 @@ const CompanyPage: NextPageWithLayout = () => {
       </p>
       <div className="">
         <div className="mt-10 border-t">
-          <Table columns={columns} rows={rows} />
+          <Table columns={colsProjects} rows={rowsProjects} />
         </div>
         <div className="mt-6 border-t pt-6">
-          <p className="font-bold pb-2">Molds:</p>
-          {companies?.molds?.map((el: any) => (
-            <Link key={el.id} href={`/database/molds/${el.id}`}>
-              <a className="hover:underline py-1 px-2 rounded-md bg-zinc-600 text-white font-bold mr-2">{el.moldNo}</a>
-            </Link>
-          ))}
-        </div>
-        <div className="mt-6 border-t pt-6">
-          <p className="font-bold pb-2">Whitelisted Molds:</p>
-          {companies?.whitelist?.map((el: any) => (
-            <Link key={el.id} href={`/database/molds/${el.molds.id}`}>
-              <a className="hover:underline py-1 px-2 rounded-md bg-zinc-600 text-white font-bold mr-2">{el.moldNo}</a>
-            </Link>
-          ))}
+          <Table columns={colsMolds} rows={rowsMolds} />
         </div>
       </div>
     </section>

@@ -5,15 +5,18 @@ type Props = {
   table: string
   data: any
   mutate: any
+  disabled?: boolean
+  alsoDelete?: Array<Object>
 }
 
-const DeleteButton: React.FC<Props> = ({ data, table, mutate }) => {
+const DeleteButton: React.FC<Props> = ({ data, table, mutate, disabled, alsoDelete }) => {
   const deleteCustomer = async (event: any, id: string) => {
     event.preventDefault()
 
     const body = {
       data: id,
       table: table,
+      alsoDelete: alsoDelete,
     }
 
     await fetch(`/api/rest`, {
@@ -28,8 +31,8 @@ const DeleteButton: React.FC<Props> = ({ data, table, mutate }) => {
   }
 
   return (
-    <button onClick={(event: any) => deleteCustomer(event, data.id)} className="p-1">
-      <TrashIcon className="h-5 w-5 text-zinc-600" />
+    <button disabled={disabled} onClick={(event: any) => deleteCustomer(event, data.id)} className="p-1">
+      <TrashIcon className={'h-5 w-5 ' + (disabled ? 'text-zinc-400' : 'text-zinc-600')} />
     </button>
   )
 }

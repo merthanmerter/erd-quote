@@ -1,28 +1,24 @@
 import { Menu } from '@headlessui/react'
 import Logo from 'assets/images/erd-metal-logo-white.png'
-import AuthContext from 'context/auth'
+import { signOut, useSession } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { forwardRef, useContext } from 'react'
+import { forwardRef } from 'react'
 
 export interface IHeader extends React.ComponentPropsWithoutRef<'header'> {}
 
 const navigation = [
   {
     id: 'companies',
-    links: ['industries', 'groups', 'companies'],
+    links: ['industries', 'groups', 'companies', 'projects'],
   },
   {
     id: 'database',
     links: ['molds', 'alloys', 'surfaces', 'colors', 'drawings'],
   },
   {
-    id: 'parts',
-    links: ['manufactured', 'purchased'],
-  },
-  {
-    id: 'projects',
-    links: ['projects', 'products'],
+    id: 'products',
+    links: ['manufactured', 'purchased', 'products'],
   },
   {
     id: 'inquiries',
@@ -47,11 +43,12 @@ const MyLink = forwardRef((props: any, ref: any) => {
 })
 /* eslint-enable  */
 
-const Header: React.FC<IHeader> = ({ className, ...headerProps }) => {
-  const { authenticated, login, logOut } = useContext(AuthContext)
+const Header: React.FC<IHeader> = () => {
+  const { data: session } = useSession()
+  const sO: any = signOut
 
   return (
-    <header {...headerProps} className={`${className}`}>
+    <header>
       <nav className="mb-6 bg-zinc-700 text-white h-16 flex items-center">
         <div className="container">
           <div className="flex justify-between">
@@ -63,34 +60,34 @@ const Header: React.FC<IHeader> = ({ className, ...headerProps }) => {
               </div>
             </Link>
 
-            <div className="flex gap-2">
-              {navigation.map(
-                (el, key) =>
-                  authenticated && (
-                    <Menu key={key} as="div" className="relative inline-block text-left">
-                      <Menu.Button className="select-none capitalize inline-flex w-full justify-center rounded-md bg-black bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-                        {el.id}
-                      </Menu.Button>
+            {session && (
+              <div className="flex gap-2">
+                {navigation.map((el, key) => (
+                  <Menu key={key} as="div" className="relative inline-block text-left">
+                    <Menu.Button className="select-none capitalize justify-center rounded-md transition-colors bg-black bg-zinc-800 hover:bg-zinc-900 px-4 py-2 text-sm font-medium text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+                      {el.id}
+                    </Menu.Button>
 
-                      <Menu.Items className="z-50 capitalize absolute right-0 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        {el.links.map((link, key) => (
-                          <div key={key} className="px-1 py-1 z-50 select-none">
-                            <Menu.Item>
-                              <MyLink href={`/${el.id}/${link}`}>{link}</MyLink>
-                            </Menu.Item>
-                          </div>
-                        ))}
-                      </Menu.Items>
-                    </Menu>
-                  )
-              )}
-              <button
-                onClick={authenticated ? logOut : login}
-                className="elect-none capitalize inline-flex w-full justify-center rounded-md bg-blue-600 bg-opacity-90 px-4 py-2 text-sm font-medium transition-opacity text-white hover:bg-opacity-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
-              >
-                {authenticated ? 'Sign Out' : 'Sign In'}
-              </button>
-            </div>
+                    <Menu.Items className="z-50 capitalize absolute right-0 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      {el.links.map((link, key) => (
+                        <div key={key} className="px-1 py-1 z-50 select-none">
+                          <Menu.Item>
+                            <MyLink href={`/${el.id}/${link}`}>{link}</MyLink>
+                          </Menu.Item>
+                        </div>
+                      ))}
+                    </Menu.Items>
+                  </Menu>
+                ))}
+
+                <button
+                  onClick={sO}
+                  className="select-none capitalize justify-center rounded-md bg-blue-600 transition-colors hover:bg-blue-700 px-4 py-2 text-sm font-medium text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
+                >
+                  Sign Out
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </nav>

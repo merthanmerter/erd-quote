@@ -1,6 +1,6 @@
 import EditButton from '@components/buttons/edit'
-import DeleteButton from '@components/deletebutton'
-import InputGroup from '@components/inputGroup'
+import DeleteButton from '@components/DeleteButton'
+import InputGroup from '@components/InputGroup'
 import PrimaryLayout from '@components/layouts/primary'
 import Table from '@components/table'
 import useFetchData from 'hooks/useFetchData'
@@ -18,21 +18,36 @@ const MoldsPage: NextPageWithLayout = () => {
     { id: 4, title: 'Perimeter (mm)' },
     { id: 6, title: 'Mold Type' },
     { id: 7, title: 'Tool Cost (USD)' },
-    { id: 8, title: 'Created At' },
+    { id: 8, title: 'Parts' },
+    { id: 9, title: 'Whitelisted' },
+    { id: 10, title: 'Created At' },
   ]
 
   const rows = molds?.map((el: any, key: number) => (
     <tr key={el.id} className={key % 2 ? '' : 'bg-gray-100'}>
       <td className="p-2 flex gap-2">
         <EditButton href={`/database/molds/${el.id}`} />
-        <DeleteButton mutate={mutate} table="molds" data={el} />
+        <DeleteButton
+          disabled={el.manufactured.length}
+          mutate={mutate}
+          table="molds"
+          data={el}
+          alsoDelete={[
+            {
+              table: 'whitelist',
+              id: el?.whitelist?.id,
+            },
+          ]}
+        />
       </td>
       <td className="p-2">{el.companiesId}</td>
       <td className="p-2">{el.moldNo}</td>
-      <td className="p-2">{+el.kgm}</td>
+      <td className="p-2">{el.kgm}</td>
       <td className="p-2">{+el.perimeter}</td>
       <td className="p-2">{el.moldType}</td>
       <td className="p-2">{el.toolCost}</td>
+      <td className="p-2">{el.manufactured.length}</td>
+      <td className="p-2">{el?.whitelist?.companies?.length || 0}</td>
       <td className="p-2">{new Date(el.createdAt).toLocaleDateString()}</td>
     </tr>
   ))
@@ -58,7 +73,7 @@ const MoldsPage: NextPageWithLayout = () => {
               label: 'Mold No',
               required: true,
             },
-            { id: 'kgm', label: 'kg/m', required: true },
+            { id: 'kgm', label: 'kg/m', required: true, type: 'decimal' },
             {
               id: 'perimeter',
               type: 'number',

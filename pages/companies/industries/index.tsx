@@ -1,5 +1,5 @@
-import DeleteButton from '@components/deletebutton'
-import InputGroup from '@components/inputGroup'
+import DeleteButton from '@components/DeleteButton'
+import InputGroup from '@components/InputGroup'
 import PrimaryLayout from '@components/layouts/primary'
 import Table from '@components/table'
 import useFetchData from 'hooks/useFetchData'
@@ -19,7 +19,7 @@ const IndustriesPage: NextPageWithLayout = () => {
   const rows = industries?.map((el: any, key: number) => (
     <tr key={el.id} className={key % 2 ? '' : 'bg-gray-100'}>
       <td className="p-2 flex gap-2">
-        <DeleteButton mutate={mutate} table="industries" data={el} />
+        <DeleteButton disabled={el.groups.length || el.companies.length} mutate={mutate} table="industries" data={el} />
       </td>
       <td className="p-2">{el.name}</td>
       <td className="p-2">{el.groups.length}</td>

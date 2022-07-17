@@ -9,28 +9,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     switch (method) {
       case 'PATCH':
-        await prisma.colors.update({
+        await prisma.products.update({
           where: {
-            color: data.color,
+            id: data.id,
           },
           data: {
-            surfaces: {
+            projects: {
               connect: {
-                surface: data.surface,
+                name: data.project,
               },
             },
           },
         })
         break
       case 'DELETE':
-        await prisma.colors.update({
+        await prisma.products.update({
           where: {
-            color: data.color,
+            id: data.id,
           },
           data: {
-            surfaces: {
+            projects: {
               disconnect: {
-                id: data.surface,
+                id: data.project,
               },
             },
           },

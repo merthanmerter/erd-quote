@@ -7,7 +7,7 @@ type Props = {
 
 const Table: React.FC<Props> = (props) => {
   return (
-    <div className="overflow-x-auto pt-4">
+    <div className="overflow-x-auto mt-4 border rounded-md">
       <table className="text-left w-full whitespace-nowrap">
         <thead>
           <tr>

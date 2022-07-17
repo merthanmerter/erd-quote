@@ -13,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     switch (method) {
       case 'GET':
         response = await p[table].findUnique({
-          where: { id: id },
+          where: { id: +id || id },
           include: tables[table]?.include,
         })
         break
@@ -32,12 +32,22 @@ const tables: any = {
   companies: {
     include: {
       whitelist: {
+        orderBy: { createdAt: 'desc' },
         include: {
           molds: true,
         },
       },
-      molds: true,
-      projects: true,
+      molds: {
+        orderBy: { createdAt: 'desc' },
+      },
+      projects: {
+        orderBy: { createdAt: 'desc' },
+        include: {
+          products: {
+            orderBy: { createdAt: 'desc' },
+          }
+        }
+      },
     },
   },
   colors: {
@@ -55,7 +65,13 @@ const tables: any = {
   },
   projects: {
     include: {
-      companies: true,
+      companies: {
+        include: {
+          molds: true, whitelist: {
+            include: { molds: true }
+          }
+        }
+      },
       products: {
         include: {
           bom: {
@@ -70,6 +86,12 @@ const tables: any = {
           },
         },
       },
+    },
+  },
+  products: {
+    include: {
+      projects: true,
+      bom: true
     },
   },
 }

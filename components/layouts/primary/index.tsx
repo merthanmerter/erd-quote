@@ -1,30 +1,41 @@
 import Footer from '@components/navigation/footer'
 import Header from '@components/navigation/header'
-import AuthContext from 'context/auth'
+import SignIn from '@components/signin'
+import { useSession } from 'next-auth/react'
 import Head from 'next/head'
-import { useContext } from 'react'
 
 export interface IPrimaryLayout extends React.ComponentPropsWithoutRef<'div'> {}
 
 const PrimaryLayout: React.FC<IPrimaryLayout> = ({ children, title }) => {
-  const { authenticated } = useContext(AuthContext)
+  const { data: session }: any = useSession()
 
-  return (
-    <>
-      <Head>
-        <title>{title}</title>
-      </Head>
-      <Header />
-      {authenticated ? (
-        <main className="container">{children}</main>
-      ) : (
+  if (session === null)
+    return (
+      <>
+        <Head>
+          <title>{title}</title>
+        </Head>
+        <Header />
         <main className="container">
-          <p>Please log in with an authorized account.</p>
+          <SignIn />
         </main>
-      )}
-      <Footer />
-    </>
-  )
+        <Footer />
+      </>
+    )
+
+  if (session != null)
+    return (
+      <>
+        <Head>
+          <title>{title}</title>
+        </Head>
+        <Header />
+        <main className="container">{children}</main>
+        <Footer />
+      </>
+    )
+
+  return <></>
 }
 
 export default PrimaryLayout

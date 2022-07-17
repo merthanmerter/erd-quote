@@ -173,7 +173,7 @@ model bom {
 model products {
   id                Int        @id @unique @default(autoincrement())
   createdAt         DateTime   @default(now())
-  customerProductId String
+  customerProductId String     @unique
   bom               bom[]
   projects          projects[]
 }

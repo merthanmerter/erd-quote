@@ -1,18 +1,20 @@
 import EditButton from '@components/buttons/edit'
-import DeleteButton from '@components/deletebutton'
-import InputGroup from '@components/inputGroup'
+import DeleteButton from '@components/DeleteButton'
+import InputGroup from '@components/InputGroup'
 import PrimaryLayout from '@components/layouts/primary'
 import Table from '@components/table'
 import useFetchData from 'hooks/useFetchData'
 import { NextPageWithLayout } from 'pages/page'
+import { useState } from 'react'
 
 const ManufacturedPartsPage: NextPageWithLayout = () => {
   const { data: manufactured, mutate } = useFetchData('/api/data/many/manufactured')
   const { data: molds } = useFetchData('/api/data/many/molds')
   const { data: alloys } = useFetchData('/api/data/many/alloys')
   const { data: surfaces } = useFetchData('/api/data/many/surfaces')
-  const { data: colors } = useFetchData('/api/data/many/colors')
   const { data: drawings } = useFetchData('/api/data/many/drawings')
+
+  const [surface, setSurface] = useState<{ surface: any }>()
 
   const columns = [
     { id: 0, title: 'Manage' },
@@ -23,22 +25,24 @@ const ManufacturedPartsPage: NextPageWithLayout = () => {
     { id: 5, title: 'Surface' },
     { id: 6, title: 'Color' },
     { id: 7, title: 'Drawing' },
-    { id: 8, title: 'Created At' },
+    { id: 8, title: 'Products' },
+    { id: 9, title: 'Created At' },
   ]
 
   const rows = manufactured?.map((el: any, key: number) => (
     <tr key={el.id} className={key % 2 ? '' : 'bg-gray-100'}>
       <td className="p-2 flex gap-2">
-        <EditButton href={`/parts/manufactured/${el.id}`} />
-        <DeleteButton mutate={mutate} table="manufactured" data={el} />
+        <EditButton href={`/products/manufactured/${el.id}`} />
+        <DeleteButton disabled={el.bom.length} mutate={mutate} table="manufactured" data={el} />
       </td>
-      <td className="p-2">{el.id.toUpperCase()}</td>
+      <td className="p-2">{el.id}</td>
       <td className="p-2">{el.moldsId}</td>
       <td className="p-2">{el.profileLength}</td>
       <td className="p-2">{el.alloysId}</td>
       <td className="p-2">{el.surfacesId}</td>
       <td className="p-2">{el.colorsId}</td>
       <td className="p-2">{el.drawingsId}</td>
+      <td className="p-2">{el.bom.length}</td>
       <td className="p-2">{new Date(el.createdAt).toLocaleDateString()}</td>
     </tr>
   ))
@@ -81,13 +85,14 @@ const ManufacturedPartsPage: NextPageWithLayout = () => {
               autoComplete: true,
               acArray: surfaces,
               options: 'surface',
+              setState: setSurface,
             },
             {
               id: 'colorsId',
               label: 'Color',
               required: true,
               autoComplete: true,
-              acArray: colors,
+              acArray: surfaces?.find((el: any) => el?.surface == surface?.surface)?.colors,
               options: 'color',
             },
             {
